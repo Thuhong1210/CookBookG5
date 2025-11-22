@@ -1,0 +1,161 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background: #fff;
+}
+
+/* MAIN LAYOUT */
+.auth-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100vh;
+}
+
+/* LEFT PANEL (FORM) */
+.auth-form {
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.logo-text {
+    font-size: 28px;
+    font-weight: 700;
+    color: #ff7b00;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 28px;
+    margin-bottom: 6px;
+}
+
+.subtitle {
+    font-size: 15px;
+    opacity: 0.7;
+    margin-bottom: 30px;
+}
+
+/* FORM FIELDS */
+form {
+    width: 90%;
+    max-width: 380px;
+}
+
+label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+/* PASSWORD TOGGLE */
+.password-box {
+    position: relative;
+}
+
+.password-box input {
+    padding-right: 40px;
+}
+
+.password-box .toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* TERMS */
+.terms {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-bottom: 18px;
+}
+
+.terms a {
+    color: #ff7b00;
+}
+
+/* BUTTON */
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background: #ff7b00;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: 0.2s;
+}
+
+.btn-primary:hover {
+    background: #e46d00;
+}
+
+/* SWITCH LINKS */
+.switch-auth {
+    font-size: 13px;
+}
+
+.switch-auth a {
+    color: #ff7b00;
+    text-decoration: none;
+}
+
+/* LOGIN OPTIONS */
+.auth-options {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.forgot {
+    font-size: 13px;
+    color: #ff7b00;
+}
+
+/* RIGHT SIDE: GREEN BACKGROUND */
+.auth-side-green {
+    background: #13d16f;         /* màu xanh đúng vibe em gửi */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+/* BOX CHỨA ẢNH */
+.auth-image-box {
+    width: 75%;
+    max-width: 480px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* ẢNH BÊN TRONG */
+.auth-image-box img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 16px;
+}
+

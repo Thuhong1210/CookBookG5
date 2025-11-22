@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile | FlavorVerse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="left-nav">
+        <span class="logo-text">FlavorVerse</span>
+        <a href="#">Home</a>
+        <a href="#">All Recipes</a>
+    </div>
+
+    <div class="header-search">
+        <input type="text" placeholder="Search recipes...">
+    </div>
+
+    <div class="right-nav">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" class="nav-avatar">
+    </div>
+</header>
+
+
+<!-- =============== USER PROFILE =============== -->
+<section class="user-profile">
+
+    <!-- AVATAR -->
+    <div class="profile-avatar">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="">
+    </div>
+
+    <!-- NAME -->
+    <h2 class="profile-name">Tung Lam Nguyen</h2>
+
+    <!-- BIO -->
+    <p class="profile-bio">
+        Passionate home cook exploring global cuisines. Sharing my favorite recipes and culinary
+        adventures, one delicious dish at a time. Always experimenting with new flavors!
+    </p>
+
+    <!-- EDIT BUTTON -->
+    <button class="btn-edit-profile">Edit Profile</button>
+
+    <!-- STATS BOX -->
+    <div class="profile-stats">
+        <div class="stat-box">
+            <div class="stat-number">6</div>
+            <div class="stat-label">Recipes Created</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number">3</div>
+            <div class="stat-label">Bookmarked Recipes</div>
+        </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="profile-tabs">
+        <button class="tab active">My Recipes</button>
+        <button class="tab">Bookmarked</button>
+
+        <button class="btn-add-recipe">+ Add Recipe</button>
+    </div>
+
+    <!-- GRID OF RECIPES -->
+    <div class="profile-recipes-grid">
+
+        <div class="recipe-card">
+            <img src="https://i.pinimg.com/736x/55/7a/79/557a79f2b87ef0a2ba6764b42d9e8b70.jpg">
+            <div class="recipe-content">
+                <h4 class="recipe-title">Fiery Dragon Noodles</h4>
+                <div class="recipe-info-row">
+                    <div class="info-item"><img src="icons/clock.svg" class="icon"> <span>30 min</span></div>
+                </div>
+                <div class="rating-row">
+                    <img src="icons/star-filled.svg" class="star">
+                    <img src="icons/star-filled.svg" class="star">
+                    <img src="icons/star-filled.svg" class="star">
+                    <img src="icons/star-half.svg" class="star">
+                    <span class="rating-number">4.6</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-card">
+            <img src="https://i.pinimg.com/736x/f0/51/cd/f051cdd4e66e0a7f6eee7bcddc3e39fb.jpg">
+            <div class="recipe-content">
+                <h4 class="recipe-title">Morning Berry Blast Smoothie</h4>
+                <div class="recipe-info-row">
+                    <div class="info-item"><img src="icons/clock.svg" class="icon"> <span>5 min</span></div>
+                </div>
+                <div class="rating-row">
+                    <img src="icons/star-filled.svg" class="star">
+                    <img src="icons/star-filled.svg" class="star">
+                    <img src="icons/star-filled.svg" class="star">
+                    <img src="icons/star-filled.svg" class="star">
+                    <span class="rating-number">4.9</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-card">
+            <img src="https://i.pinimg.com/736x/a5/25/90/a5259097a2d6cd39e9f7c6354925ff97.jpg">
+            <div class="recipe-content">
+                <h4 class="recipe-title">Hearty Vegan Chickpea Curry</h4>
+                <div class="recipe-info-row">
+                    <div class="info-item"><img src="icons/clock.svg" class="icon"> <span>45 min</span></div>
+                </div>
+                <div class="rating-row">
+                    <img src="icons/star-filled.svg" class="star">
+                    <img src="icons/star-filled.svg" class="star">
+                    <img src="icons/star-filled.svg" class="star">
+                    <span class="rating-number">4.5</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add more cards if needed -->
+    </div>
+
+</section>
+
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-container">
+
+        <div class="footer-col">
+            <span class="footer-logo-text">FlavorVerse</span>
+            <p class="footer-desc">Discover, share, and savor the art of cooking with CookVerse.</p>
+        </div>
+
+        <div class="footer-col">
+            <h4>Quick Links</h4>
+            <a href="#">Home</a>
+            <a href="#">Recipes</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+        </div>
+
+        <div class="footer-col">
+            <h4>Categories</h4>
+            <a href="#">Appetizers</a>
+            <a href="#">Main Courses</a>
+            <a href="#">Desserts</a>
+            <a href="#">Beverages</a>
+        </div>
+
+        <div class="footer-col">
+            <h4>Support</h4>
+            <a href="#">FAQ</a>
+            <a href="#">Help Center</a>
+            <a href="#">Feedback</a>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">© 2025 CookVerse. All rights reserved.</div>
+</footer>
+
+</body>
+</html>
