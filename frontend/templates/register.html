@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register • FlavorVerse</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .auth-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .auth-form {
+            flex: 1;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+        }
+
+        .logo-text {
+            color: #2e8b57;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        form input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 1.5rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        form input:focus {
+            outline: none;
+            border-color: #2e8b57;
+        }
+
+        .password-box {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .password-box input {
+            margin-bottom: 0;
+            padding-right: 50px;
+        }
+
+        .toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 1.2rem;
+            user-select: none;
+        }
+
+        .terms {
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .terms a {
+            color: #2e8b57;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .terms a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background-color: #2e8b57;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #26734a;
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px);
+        }
+
+        .switch-auth {
+            text-align: center;
+            margin-top: 2rem;
+            color: #666;
+        }
+
+        .switch-auth a {
+            color: #2e8b57;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .switch-auth a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-side-green {
+            flex: 1;
+            background: linear-gradient(135deg, #2e8b57, #3cb371);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .auth-image-box {
+            max-width: 80%;
+            text-align: center;
+        }
+
+        .auth-image-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .auth-container {
+                flex-direction: column;
+            }
+            
+            .auth-side-green {
+                display: none;
+            }
+            
+            .auth-form {
+                padding: 40px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="auth-container">
+
+    <!-- LEFT: FORM -->
+    <div class="auth-form">
+
+        <h1 class="logo-text">FlavorVerse</h1>
+
+        <h2>Create Your FlavorVerse Account</h2>
+        <p class="subtitle">Join our culinary community and share your delicious creations!</p>
+
+        <!-- FIX: Thêm action và method -->
+        <form action="{{ url_for('register') }}" method="POST">
+
+            <label>Username</label>
+            <input type="text" placeholder="vnu.is" name="username" required>
+
+            <label>Email</label>
+            <input type="email" placeholder="group5@vnu.edu.vn" name="email" required>
+
+            <label>Password</label>
+            <div class="password-box">
+                <input type="password" placeholder="Enter your password" name="password" required>
+                <span class="toggle">👁</span>
+            </div>
+
+            <label>Confirm Password</label>
+            <div class="password-box">
+                <input type="password" placeholder="Confirm your password" name="confirmPassword" required>
+                <span class="toggle">👁</span>
+            </div>
+
+            <p class="terms">
+                By clicking "Create Account", you agree to FlavorVerse's 
+                <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+            </p>
+
+            <!-- FIX: Thêm type="submit" -->
+            <button type="submit" class="btn-primary">Create Account</button>
+
+            <p class="switch-auth">
+                Already have an account? <a href="{{ url_for('login') }}">Log in</a>
+            </p>
+
+        </form>
+    </div>
+
+    <!-- RIGHT SIDE WITH GREEN BACKGROUND + CENTERED IMAGE -->
+    <div class="auth-side-green">
+        <div class="auth-image-box">
+            <img src="https://i.pinimg.com/1200x/75/a5/62/75a562db96c7f70fcd61b0d7cf37529c.jpg" alt="Culinary Inspiration">
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Thêm chức năng toggle password
+    document.querySelectorAll('.toggle').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            const passwordInput = this.previousElementSibling;
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                this.textContent = '🔒';
+            } else {
+                passwordInput.type = 'password';
+                this.textContent = '👁';
+            }
+        });
+    });
+
+    // Thêm validation cơ bản
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const password = this.querySelector('input[name="password"]').value;
+        const confirmPassword = this.querySelector('input[name="confirmPassword"]').value;
+        
+        if (password !== confirmPassword) {
+            e.preventDefault();
+            alert('Passwords do not match!');
+            return false;
+        }
+        
+        console.log('Form submitted successfully!');
+    });
+</script>
+
+</body>
+</html>

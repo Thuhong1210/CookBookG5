@@ -1,0 +1,1104 @@
+{% extends 'base.html' %}
+{% block content %}
+{% block navbar %}{% endblock %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+    }
+
+    body {
+        background: #f5f6fb;
+        color: #1f2933;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .admin-header {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        background: #ffffffcc;
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .admin-nav {
+        width: 100%;
+        max-width: 1200px;
+        margin: auto;
+        padding: 18px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .nav-left {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+    }
+
+    .logo-text {
+        font-size: 22px;
+        font-weight: 700;
+        color: #ff7b00;
+    }
+
+    .nav-links a {
+        margin-right: 18px;
+        color: #4a5568;
+        font-weight: 500;
+    }
+
+    .nav-links a:hover {
+        color: #ff7b00;
+    }
+
+    .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .nav-right i {
+        font-size: 18px;
+        color: #4a5568;
+        cursor: pointer;
+    }
+
+    .nav-right i:hover {
+        color: #ff7b00;
+    }
+
+    .avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid #e2e8f0;
+    }
+
+    .nav-right a {
+        padding: 8px 16px;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        color: #1f2933;
+    }
+
+    .nav-right a.primary {
+        background: #ff7b00;
+        border-color: #ff7b00;
+        color: #fff;
+    }
+
+    main {
+        max-width: 1200px;
+        margin: 30px auto 60px auto;
+        padding: 0 24px;
+    }
+
+    .hero-card {
+        background: linear-gradient(135deg, #fff0e0, #ffe7d1);
+        padding: 30px;
+        border-radius: 18px;
+        box-shadow: 0 20px 45px rgba(255, 123, 0, 0.15);
+        margin-bottom: 30px;
+    }
+
+    .hero-card h1 {
+        font-size: 32px;
+        margin-bottom: 8px;
+        letter-spacing: -0.02em;
+        font-weight: 800;
+    }
+
+    .hero-card p {
+        color: #5f6c7b;
+        max-width: 600px;
+        font-size: 15px;
+    }
+
+    .flash-messages {
+        margin-top: 20px;
+    }
+
+    .flash-message {
+        background: #fff;
+        padding: 12px 16px;
+        border-radius: 8px;
+        border-left: 4px solid #ff7b00;
+        margin-bottom: 10px;
+    }
+
+    .stats-grid {
+        display: none;
+    }
+
+    .stat-card {
+        display: none;
+    }
+
+    .stat-label {
+        font-size: 13px;
+        text-transform: uppercase;
+        color: #94a3b8;
+        letter-spacing: 0.08em;
+    }
+
+    .stat-value {
+        font-size: 30px;
+        font-weight: 700;
+        margin-top: 8px;
+        color: #1f2933;
+    }
+
+    .dashboard-grid {
+        display: none;
+    }
+
+    .card {
+        display: none;
+    }
+
+    .card h3 {
+        font-size: 18px;
+        margin-bottom: 16px;
+    }
+
+    .quick-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .quick-actions a {
+        padding: 12px 18px;
+        border-radius: 10px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        color: #1f2933;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    .quick-actions a.primary {
+        background: #ff7b00;
+        border-color: #ff7b00;
+        color: white;
+    }
+
+    .panel {
+        background: white;
+        border-radius: 18px;
+        padding: 24px;
+        box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
+        margin-bottom: 28px;
+    }
+
+    .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        padding: 14px;
+        text-align: left;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 14px;
+    }
+
+    thead th {
+        color: #94a3b8;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+    }
+
+    tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    .badge {
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+    }
+
+    .badge.admin {
+        background: rgba(255, 123, 0, 0.15);
+        color: #ff7b00;
+    }
+
+    .badge.user {
+        background: #edf2f7;
+        color: #4a5568;
+    }
+
+    .action-btn {
+        padding: 6px 12px;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        background: transparent;
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+    .action-btn.danger {
+        border-color: #ff5252;
+        color: #ff5252;
+    }
+
+    .recipe-grid,
+    .preview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 18px;
+    }
+
+    .recipe-card {
+        background: #fdfdfd;
+        border-radius: 16px;
+        border: 1px solid #f1f5f9;
+        box-shadow: 0 20px 35px rgba(15, 23, 42, 0.08);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .recipe-card img {
+        width: 100%;
+        height: 170px;
+        object-fit: cover;
+    }
+
+    .recipe-card-body {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex-grow: 1;
+    }
+
+    .recipe-footer {
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .comment-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .comment-item {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 16px;
+        border: 1px solid #edf2f7;
+    }
+
+    .comment-item strong {
+        color: #1f2933;
+    }
+
+    footer {
+        text-align: center;
+        padding: 30px;
+        color: #94a3b8;
+    }
+
+    @media (max-width: 900px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .nav-left {
+            flex-wrap: wrap;
+        }
+
+        .nav-right {
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+    }
+
+    .metric-row {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(220px, 1fr));
+        gap: 16px;
+        margin: 18px 0 24px;
+    }
+
+    .metric-card {
+        background: #fff;
+        border: 1px solid #edf2f7;
+        border-radius: 16px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .metric-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff4ec;
+        color: #ff7b00;
+    }
+
+    .metric-title {
+        font-size: 13px;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        margin-bottom: 8px;
+    }
+
+    .metric-value {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1f2933;
+    }
+
+    .metric-meta {
+        font-size: 12px;
+        color: #0ea5e9;
+        margin-top: 6px;
+    }
+
+    .grid-two {
+        display: grid;
+        grid-template-columns: 1.7fr 1.3fr;
+        gap: 18px;
+        margin-bottom: 28px;
+    }
+
+    .charts-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1.8fr;
+        gap: 18px;
+    }
+
+    .quick-filters-panel {
+        float: right;
+        width: 280px;
+    }
+
+    @media (max-width: 1100px) {
+        .quick-filters-panel {
+            float: none;
+            width: 100%;
+            margin-bottom: 18px;
+        }
+    }
+
+    .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .activity-item {
+        background: #fff;
+        border: 1px solid #edf2f7;
+        border-radius: 12px;
+        padding: 12px;
+    }
+
+    .recipe-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 12px;
+    }
+
+    .recipe-chip {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        background: #ffe9e3;
+        color: #ff7b00;
+    }
+</style>
+<div class="admin-header">
+    <div class="admin-nav">
+        <div class="nav-left">
+            <a href="{{ url_for('admin_dashboard') }}" class="logo-text">FlavorVerse Admin</a>
+            <form action="{{ url_for('admin_dashboard') }}" method="get"
+                style="display:flex; align-items:center; gap:12px;">
+                <div style="position:relative;">
+                    <input type="text" name="q" value="{{ q }}" placeholder="Search..."
+                        style="padding:10px 36px 10px 14px; border:1px solid #e2e8f0; border-radius:10px; width:320px;">
+                    <i class="fa fa-search"
+                        style="position:absolute; right:12px; top:50%; transform:translateY(-50%); color:#94a3b8;"></i>
+                </div>
+            </form>
+        </div>
+        <div class="nav-right">
+            <i class="fa fa-bell"></i>
+            <i class="fa fa-gear"></i>
+            <a href="{{ url_for('admin_profile') }}"><img
+                    src="{{ current_user.profile_picture or 'https://randomuser.me/api/portraits/men/22.jpg' }}"
+                    class="avatar" alt="avatar"></a>
+        </div>
+    </div>
+</div>
+
+<main style="display:grid; grid-template-columns: 240px 1fr; gap:24px;">
+    <aside style="background:#fff; border:1px solid #edf2f7; border-radius:16px; padding:16px; height:fit-content;">
+        <nav style="display:flex; flex-direction:column; gap:6px;">
+            <a href="{{ url_for('admin_dashboard') }}"
+                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px; {% if active_view=='dashboard' %}background:#ff7b00; color:#fff;{% endif %}"><i
+                    class="fa fa-gauge"></i><span>Dashboard</span></a>
+            <a href="{{ url_for('admin_profile') }}"
+                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px; {% if active_view=='profile' %}background:#ff7b00; color:#fff;{% endif %}"><i
+                    class="fa fa-id-card"></i><span>Admin Profile</span></a>
+            <a href="{{ url_for('admin_users') }}"
+                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px; {% if active_view=='users' %}background:#ff7b00; color:#fff;{% endif %}"><i
+                    class="fa fa-user"></i><span>Users</span></a>
+            <a href="{{ url_for('admin_recipes') }}"
+                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px; {% if active_view=='recipes' %}background:#ff7b00; color:#fff;{% endif %}"><i
+                    class="fa fa-utensils"></i><span>Recipes</span></a>
+            <a href="{{ url_for('admin_comments') }}"
+                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px; {% if active_view=='comments' %}background:#ff7b00; color:#fff;{% endif %}"><i
+                    class="fa fa-comments"></i><span>Comments</span></a>
+            <a href="{{ url_for('admin_notifications') }}"
+                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px; {% if active_view=='notifications' %}background:#ff7b00; color:#fff;{% endif %}"><i
+                    class="fa fa-bell"></i><span>Notifications</span></a>
+            <a href="{{ url_for('admin_settings') }}"
+                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px; {% if active_view=='settings' %}background:#ff7b00; color:#fff;{% endif %}"><i
+                    class="fa fa-gear"></i><span>System Settings</span></a>
+        </nav>
+    </aside>
+    <div>
+        {% if active_view == 'dashboard' %}
+        <section class="hero-card">
+            <h1>Dashboard Overview</h1>
+            <p>A comprehensive look at FlavorVerse Admin's key metrics, recent activities, and system health.</p>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+        </section>
+
+        <section class="panel">
+            <div class="panel-header">
+                <h3>Database Connection</h3>
+                <button class="action-btn" type="button" id="checkConnBtn">Kiểm tra kết nối</button>
+            </div>
+            <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:12px;">
+                <div style="background:#fff; border:1px solid #edf2f7; border-radius:12px; padding:12px;">
+                    <div class="metric-title">Engine</div>
+                    <div class="metric-value" id="db_engine">{{ db_engine }}</div>
+                </div>
+                <div style="background:#fff; border:1px solid #edf2f7; border-radius:12px; padding:12px;">
+                    <div class="metric-title">Host</div>
+                    <div class="metric-value" id="db_host">{{ db_host }}</div>
+                </div>
+                <div style="background:#fff; border:1px solid #edf2f7; border-radius:12px; padding:12px;">
+                    <div class="metric-title">Port</div>
+                    <div class="metric-value" id="db_port">{{ db_port }}</div>
+                </div>
+                <div style="background:#fff; border:1px solid #edf2f7; border-radius:12px; padding:12px;">
+                    <div class="metric-title">Database</div>
+                    <div class="metric-value" id="db_database">{{ db_database }}</div>
+                </div>
+            </div>
+            <div style="margin-top:12px; display:grid; grid-template-columns: repeat(6, 1fr); gap:10px;">
+                <div class="metric-card">
+                    <div class="metric-title">Users</div>
+                    <div class="metric-value" id="cnt_user">{{ total_users }}</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Recipes</div>
+                    <div class="metric-value" id="cnt_recipe">{{ total_recipes }}</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Comments</div>
+                    <div class="metric-value" id="cnt_comment">{{ total_comments }}</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Ratings</div>
+                    <div class="metric-value" id="cnt_rating">{{ 0 }}</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Favorites</div>
+                    <div class="metric-value" id="cnt_favorite">{{ total_favorites }}</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Notifications</div>
+                    <div class="metric-value" id="cnt_notification">{{ 0 }}</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="charts-grid">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Recipes by Status</h3>
+                </div>
+                <canvas id="statusChart" height="220"></canvas>
+            </div>
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Top Categories</h3>
+                </div>
+                <canvas id="topCategoriesChart" height="220"></canvas>
+            </div>
+        </section>
+
+        <section class="metric-row">
+            <div class="metric-card">
+                <div class="metric-icon"><i class="fa fa-user-group"></i></div>
+                <div>
+                    <div class="metric-title">Total Users</div>
+                    <div class="metric-value">{{ total_users }}</div>
+                    <div class="metric-meta">↑ tăng so với tháng trước</div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon"><i class="fa fa-utensils"></i></div>
+                <div>
+                    <div class="metric-title">Active Recipes</div>
+                    <div class="metric-value">{{ approved_recipes_count }}</div>
+                    <div class="metric-meta">↑ duyệt gần đây</div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon" style="background:#fff6f1; color:#f97316;"><i
+                        class="fa fa-clipboard-check"></i></div>
+                <div>
+                    <div class="metric-title">Pending Recipes</div>
+                    <div class="metric-value">{{ pending_recipes_count }}</div>
+                    <div class="metric-meta" style="color:#f97316;">Review Needed</div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon" style="background:#fff4ec; color:#e67e22;"><i class="fa fa-flag"></i></div>
+                <div>
+                    <div class="metric-title">Reports Filed</div>
+                    <div class="metric-value">{{ reports_count }}</div>
+                    <div class="metric-meta">không đổi</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel quick-filters-panel">
+            <div class="panel-header">
+                <h3>Quick Filters</h3>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <a class="action-btn" href="{{ url_for('admin_recipes', status='approved') }}">Approved ({{
+                    approved_recipes_count }})</a>
+                <a class="action-btn" href="{{ url_for('admin_recipes', status='pending') }}">Pending ({{
+                    pending_recipes_count }})</a>
+                <a class="action-btn" href="{{ url_for('admin_recipes', status='hidden') }}">Hidden ({{
+                    hidden_recipes_count }})</a>
+                <a class="action-btn" href="{{ url_for('admin_recipes') }}">All Recipes</a>
+            </div>
+        </section>
+
+        <section class="grid-two">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Recent Activity</h3>
+                </div>
+                <div class="activity-list">
+                    {% for n in notifications %}
+                    <div class="activity-item">
+                        <div><strong>{{ n.actor.username if n.actor else 'System' }}</strong> {{ n.message }}</div>
+                        <small class="text-muted">{{ n.created_at.strftime('%d/%m/%Y %H:%M') if n.created_at else ''
+                            }}</small>
+                    </div>
+                    {% else %}
+                    <div class="activity-item">Chưa có hoạt động gần đây.</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Recent Recipes</h3>
+                </div>
+                <div class="recipe-row">
+                    {% for r in recent_recipes %}
+                    <div class="recipe-card">
+                        {% if r.image_url %}
+                        <img src="{{ r.image_url }}" alt="{{ r.title }}">
+                        {% endif %}
+                        <div class="recipe-card-body">
+                            <h4>{{ r.title }}</h4>
+                            <small class="text-muted">By {{ r.user.username if r.user else 'Đã xoá' }}</small>
+                            {% if r.status == 'approved' %}
+                            <span class="recipe-chip">Approved</span>
+                            {% elif r.status == 'pending' %}
+                            <span class="recipe-chip">Pending</span>
+                            {% else %}
+                            <span class="recipe-chip">Hidden</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <p>Không có công thức gần đây.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+
+        {% endif %}
+
+        {% if active_view == 'profile' %}
+        <section class="panel">
+            <div class="panel-header">
+                <h3>Admin Profile</h3>
+                <a href="{{ url_for('logout') }}" class="action-btn danger">Logout</a>
+            </div>
+            <div style="display:grid; grid-template-columns: 280px 1fr; gap:18px;">
+                <div
+                    style="background:#fff; border:1px solid #edf2f7; border-radius:16px; padding:16px; text-align:center;">
+                    <img src="{{ current_user.profile_picture or 'https://randomuser.me/api/portraits/men/22.jpg' }}"
+                        alt="avatar"
+                        style="width:140px; height:140px; border-radius:50%; object-fit:cover; border:2px solid #e2e8f0;">
+                    <h4 style="margin-top:12px;">{{ current_user.username }}</h4>
+                    <p class="text-muted" style="font-size:13px;">{{ current_user.email }}</p>
+                    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-top:12px;">
+                        <div style="background:#fff; border:1px solid #edf2f7; border-radius:12px; padding:10px;">
+                            <div class="metric-title">Recipes</div>
+                            <div class="metric-value">{{ my_recipes_count }}</div>
+                        </div>
+                        <div style="background:#fff; border:1px solid #edf2f7; border-radius:12px; padding:10px;">
+                            <div class="metric-title">Pending</div>
+                            <div class="metric-value">{{ my_pending_recipes_count }}</div>
+                        </div>
+                        <div style="background:#fff; border:1px solid #edf2f7; border-radius:12px; padding:10px;">
+                            <div class="metric-title">Notifications</div>
+                            <div class="metric-value">{{ my_notifications_count }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <form action="{{ url_for('update_profile') }}" method="post"
+                        style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                        <div>
+                            <label style="font-size:12px; color:#94a3b8;">Username</label>
+                            <input type="text" name="username" value="{{ current_user.username }}"
+                                style="padding:10px; border:1px solid #e2e8f0; border-radius:8px; width:100%;">
+                        </div>
+                        <div>
+                            <label style="font-size:12px; color:#94a3b8;">Email</label>
+                            <input type="email" name="email" value="{{ current_user.email }}"
+                                style="padding:10px; border:1px solid #e2e8f0; border-radius:8px; width:100%;">
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                            <label style="font-size:12px; color:#94a3b8;">Bio</label>
+                            <textarea name="bio" rows="3"
+                                style="padding:10px; border:1px solid #e2e8f0; border-radius:8px; width:100%;">{{ current_user.bio or '' }}</textarea>
+                        </div>
+                        <div style="grid-column: 1 / -1; display:flex; gap:10px;">
+                            <button class="action-btn" type="submit">Update Profile</button>
+                            <a class="action-btn danger" href="{{ url_for('logout') }}">Logout</a>
+                        </div>
+                    </form>
+
+                    <hr style="margin:18px 0; border:none; border-top:1px solid #edf2f7;">
+
+                    <form action="{{ url_for('update_profile_picture') }}" method="post" enctype="multipart/form-data"
+                        style="display:flex; gap:12px; align-items:center; margin-bottom:12px;">
+                        <input type="file" name="profile_picture_file" accept="image/*">
+                        <input type="url" name="profile_picture_url" placeholder="Or paste image URL"
+                            style="padding:10px; border:1px solid #e2e8f0; border-radius:8px; flex:1;">
+                        <button class="action-btn" type="submit">Update Avatar</button>
+                    </form>
+
+                    <form action="{{ url_for('update_password') }}" method="post"
+                        style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                        <div>
+                            <label style="font-size:12px; color:#94a3b8;">Current Password</label>
+                            <input type="password" name="current_password"
+                                style="padding:10px; border:1px solid #e2e8f0; border-radius:8px; width:100%;" required>
+                        </div>
+                        <div></div>
+                        <div>
+                            <label style="font-size:12px; color:#94a3b8;">New Password</label>
+                            <input type="password" name="new_password"
+                                style="padding:10px; border:1px solid #e2e8f0; border-radius:8px; width:100%;" required>
+                        </div>
+                        <div>
+                            <label style="font-size:12px; color:#94a3b8;">Confirm Password</label>
+                            <input type="password" name="confirm_password"
+                                style="padding:10px; border:1px solid #e2e8f0; border-radius:8px; width:100%;" required>
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                            <button class="action-btn" type="submit">Change Password</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        {% if active_view == 'users' %}
+        <section class="panel" id="users-panel">
+            <div class="panel-header">
+                <h3>Quản lý người dùng</h3>
+                <p>Cấp quyền admin hoặc xoá tài khoản</p>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tên</th>
+                            <th>Email</th>
+                            <th>Vai trò</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% if user.is_admin %}
+                                <span class="badge admin">Admin</span>
+                                {% else %}
+                                <span class="badge user">User</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if current_user.id != user.id %}
+                                <form action="{{ url_for('toggle_user_admin', user_id=user.id) }}" method="post"
+                                    style="display:inline">
+                                    <button class="action-btn">{{ 'Thu hồi quyền' if user.is_admin else 'Cấp quyền
+                                        admin' }}</button>
+                                </form>
+                                <form action="{{ url_for('delete_user_admin', user_id=user.id) }}" method="post"
+                                    style="display:inline"
+                                    onsubmit="return confirm('Xoá người dùng {{ user.username }}?');">
+                                    <button class="action-btn danger">Xoá</button>
+                                </form>
+                                {% else %}
+                                <small class="text-muted">Đang đăng nhập</small>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4">Chưa có người dùng.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        {% endif %}
+
+        {% if active_view == 'recipes' %}
+        <section class="panel" id="recipes-moderation">
+            <div class="panel-header">
+                <div>
+                    <h3>Recipes Moderation</h3>
+                    <p>Quản lý các công thức do người dùng gửi</p>
+                </div>
+                <form action="{{ url_for('admin_recipes') }}" method="get"
+                    style="display:flex; gap:10px; align-items:center;">
+                    <input type="text" name="q" value="{{ q }}" placeholder="Search recipes by title..."
+                        style="padding:10px 12px; border:1px solid #e2e8f0; border-radius:8px; width:240px;">
+                    <select name="status" style="padding:10px; border:1px solid #e2e8f0; border-radius:8px;">
+                        <option value="">Status</option>
+                        <option value="approved" {% if status_filter=='approved' %}selected{% endif %}>Approved</option>
+                        <option value="pending" {% if status_filter=='pending' %}selected{% endif %}>Pending</option>
+                        <option value="hidden" {% if status_filter=='hidden' %}selected{% endif %}>Hidden</option>
+                    </select>
+                    <select name="difficulty" style="padding:10px; border:1px solid #e2e8f0; border-radius:8px;">
+                        <option value="">Difficulty</option>
+                        <option value="Easy" {% if difficulty_filter=='Easy' %}selected{% endif %}>Easy</option>
+                        <option value="Medium" {% if difficulty_filter=='Medium' %}selected{% endif %}>Medium</option>
+                        <option value="Hard" {% if difficulty_filter=='Hard' %}selected{% endif %}>Hard</option>
+                    </select>
+                    <select name="category" style="padding:10px; border:1px solid #e2e8f0; border-radius:8px;">
+                        <option value="">Category</option>
+                        {% for label, count in category_counts %}
+                        <option value="{{ label }}" {% if category_filter==label %}selected{% endif %}>{{ label or
+                            'Khác' }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="text" name="author" value="{{ author_filter }}" placeholder="Filter by author..."
+                        style="padding:10px 12px; border:1px solid #e2e8f0; border-radius:8px; width:200px;">
+                    <button class="action-btn" type="submit">Lọc</button>
+                </form>
+            </div>
+            <div class="table-wrapper">
+                <form id="batchForm" action="{{ url_for('admin_recipes_batch') }}" method="post">
+                    <div style="display:flex; gap:10px; margin-bottom:12px;">
+                        <button class="action-btn" type="button" onclick="submitBatch('approve')">Approve
+                            Selected</button>
+                        <button class="action-btn" type="button" onclick="submitBatch('hide')">Hide Selected</button>
+                        <button class="action-btn danger" type="button" onclick="submitBatch('delete')">Delete
+                            Selected</button>
+                    </div>
+                    <input type="hidden" name="action" id="batchAction">
+                    <input type="hidden" name="ids" id="batchIds">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" onclick="toggleAll(this)"></th>
+                                <th>Recipe Image</th>
+                                <th>Recipe Title</th>
+                                <th>Author</th>
+                                <th>Category</th>
+                                <th>Difficulty</th>
+                                <th>Created Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for recipe in moderation_recipes %}
+                            <tr>
+                                <td><input type="checkbox" class="row-check" value="{{ recipe.id }}"></td>
+                                <td>
+                                    {% if recipe.image_url %}
+                                    <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}"
+                                        style="width:44px; height:44px; object-fit:cover; border-radius:8px;">
+                                    {% endif %}
+                                </td>
+                                <td>{{ recipe.title }}</td>
+                                <td>{{ recipe.user.username if recipe.user else 'Đã xoá' }}</td>
+                                <td>{{ recipe.category or 'Khác' }}</td>
+                                <td>{{ recipe.difficulty }}</td>
+                                <td>{{ recipe.created_at.strftime('%Y-%m-%d') if recipe.created_at else '' }}</td>
+                                <td>
+                                    {% if recipe.status == 'approved' %}
+                                    <span class="badge admin">Approved</span>
+                                    {% elif recipe.status == 'pending' %}
+                                    <span class="badge user" style="background:#ffe9e3; color:#ff7b00;">Pending</span>
+                                    {% else %}
+                                    <span class="badge user">Hidden</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('recipe_details', recipe_id=recipe.id) }}" target="_blank"
+                                        class="action-btn">Xem</a>
+                                    <form action="{{ url_for('delete_recipe_admin', recipe_id=recipe.id) }}"
+                                        method="post" style="display:inline"
+                                        onsubmit="return confirm('Xoá công thức {{ recipe.title }}?');">
+                                        <button class="action-btn danger">Xoá</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="9">Không có công thức phù hợp.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </section>
+        {% endif %}
+
+        {% if active_view == 'comments' %}
+        <section class="panel" id="comments">
+            <div class="panel-header">
+                <h3>Bình luận mới nhất</h3>
+                <p>Theo dõi thảo luận từ cộng đồng</p>
+            </div>
+            <div class="comment-list">
+                {% for comment in recent_comments %}
+                <div class="comment-item">
+                    <div>
+                        <strong>{{ comment.user.username if comment.user else 'Ẩn danh' }}</strong>
+                        <span class="text-muted">trên</span>
+                        <a href="{{ url_for('recipe_details', recipe_id=comment.recipe.id) }}" target="_blank">{{
+                            comment.recipe.title }}</a>
+                    </div>
+                    <p>{{ comment.comment }}</p>
+                    <small class="rating-log-time">{{ comment.created_at.strftime('%d/%m/%Y %H:%M') if
+                        comment.created_at else '' }}</small>
+                    <form action="{{ url_for('delete_comment_admin', comment_id=comment.id) }}" method="post"
+                        onsubmit="return confirm('Xoá bình luận này?');">
+                        <button class="action-btn danger">Xoá</button>
+                    </form>
+                </div>
+                {% else %}
+                <p>Chưa có bình luận.</p>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        {% if active_view == 'dashboard' %}{% endif %}
+        {% if active_view == 'notifications' %}
+        <section class="panel" id="notifications">
+            <div class="panel-header">
+                <h3>Thông báo hệ thống</h3>
+                <p>Danh sách thông báo gần đây</p>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Người nhận</th>
+                            <th>Người thực hiện</th>
+                            <th>Loại</th>
+                            <th>Nội dung</th>
+                            <th>Thời gian</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for n in notifications %}
+                        <tr>
+                            <td>{{ n.user.username if n.user else 'N/A' }}</td>
+                            <td>{{ n.actor.username if n.actor else 'System' }}</td>
+                            <td>{{ n.notification_type }}</td>
+                            <td>
+                                {% if n.recipe %}
+                                <a href="{{ url_for('recipe_details', recipe_id=n.recipe.id) }}" target="_blank">{{
+                                    n.message }}</a>
+                                {% else %}
+                                {{ n.message }}
+                                {% endif %}
+                            </td>
+                            <td>{{ n.created_at.strftime('%d/%m/%Y %H:%M') if n.created_at else '' }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5">Không có thông báo.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        {% endif %}
+        {% if active_view == 'settings' %}
+        <section class="panel" id="system">
+            <div class="panel-header">
+                <h3>Cài đặt hệ thống</h3>
+                <p>Cấu hình cơ bản cho hệ thống</p>
+            </div>
+            <div class="table-wrapper">
+                <p class="text-muted">Phần cài đặt đang được cập nhật.</p>
+            </div>
+        </section>
+        {% endif %}
+    </div>
+</main>
+
+<footer>
+    © 2025 FlavorVerse Admin Dashboard
+</footer>
+
+{% if active_view == 'dashboard' %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const btn = document.getElementById('checkConnBtn');
+    if (btn) {
+        btn.addEventListener('click', async () => {
+            try {
+                const r = await fetch('{{ url_for('admin_health') }}');
+                const j = await r.json();
+                const s = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v ?? ''; };
+                s('db_engine', j.engine);
+                s('db_host', j.host);
+                s('db_port', j.port);
+                s('db_database', j.database);
+                s('cnt_user', j.counts.user);
+                s('cnt_recipe', j.counts.recipe);
+                s('cnt_comment', j.counts.comment);
+                s('cnt_rating', j.counts.rating);
+                s('cnt_favorite', j.counts.favorite);
+                s('cnt_notification', j.counts.notification);
+                btn.textContent = 'Đã kiểm tra';
+            } catch (e) {
+                btn.textContent = 'Lỗi, thử lại';
+            }
+        });
+    }
+    const statusCanvas = document.getElementById('statusChart');
+    const topCatCanvas = document.getElementById('topCategoriesChart');
+    const statusData = {
+        labels: ['Approved', 'Pending', 'Hidden'],
+        data: [
+            {{ approved_recipes_count or 0 }},
+        {{ pending_recipes_count or 0 }},
+    { { hidden_recipes_count or 0 } }
+            ]
+        };
+    const categoryData = {
+        labels: [{% for label, count in category_counts %}'{{ label or "Khác" }}'{% if not loop.last %}, {% endif %} {% endfor %}],
+    data: [{% for label, count in category_counts %}{ { count } } {% if not loop.last %}, {% endif %} {% endfor %}]
+        };
+    if (statusCanvas) {
+        new Chart(statusCanvas, {
+            type: 'doughnut',
+            data: {
+                labels: statusData.labels,
+                datasets: [{
+                    data: statusData.data,
+                    backgroundColor: ['#e67e22', '#3498db', '#e74c3c']
+                }]
+            },
+            options: { plugins: { legend: { position: 'bottom' } }, cutout: '60%' }
+        });
+    }
+    if (topCatCanvas && categoryData.labels.length) {
+        new Chart(topCatCanvas, {
+            type: 'bar',
+            data: {
+                labels: categoryData.labels,
+                datasets: [{
+                    data: categoryData.data,
+                    backgroundColor: '#e67e22',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                plugins: { legend: { display: false } },
+                scales: { x: { grid: { display: false } }, y: { grid: { display: false } } }
+            }
+        });
+    }
+</script>
+{% endif %}
+<script>
+    function toggleAll(el) {
+        document.querySelectorAll('.row-check').forEach(c => { c.checked = el.checked });
+    }
+    function submitBatch(action) {
+        const ids = Array.from(document.querySelectorAll('.row-check:checked')).map(c => c.value);
+        if (!ids.length) { alert('Chưa chọn công thức'); return; }
+        document.getElementById('batchAction').value = action;
+        document.getElementById('batchIds').value = ids.join(',');
+        document.getElementById('batchForm').submit();
+    }
+</script>
+{% endblock %}

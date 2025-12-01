@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Recipes - FlavorVerse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* RESET */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+            color: #222;
+        }
+
+        /* HEADER */
+        header {
+            width: 100%;
+            padding: 16px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            position: fixed;
+            top: 0;
+            z-index: 20;
+            border-bottom: 1px solid #e9ecef;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff7b00;
+            letter-spacing: -0.5px;
+        }
+
+        .left-nav a {
+            text-decoration: none;
+            color: #333;
+            font-size: 15px;
+            font-weight: 500;
+            transition: 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .left-nav a:hover {
+            color: #ff7b00;
+        }
+
+        .right-nav {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            width: 260px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 6px 12px;
+            background: #fff;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .search-box button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #ff7b00;
+            font-size: 16px;
+            margin-left: 8px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .btn-create-recipe {
+            padding: 8px 18px;
+            background: #ff7b00;
+            color: white;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-create-recipe:hover {
+            background: #e66e00;
+        }
+
+        .login-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        .login-btn {
+            padding: 8px 16px;
+            color: #ff7b00;
+            border: 1.5px solid #ff7b00;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .register-btn {
+            padding: 8px 16px;
+            background: #ff7b00;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .logout-btn {
+            padding: 6px 12px;
+            background: #ff4444;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .notification-wrapper {
+            position: relative;
+        }
+
+        .notification-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            color: #ff7b00;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -4px;
+            background: #ff4444;
+            color: #fff;
+            font-size: 11px;
+            border-radius: 999px;
+            padding: 2px 6px;
+        }
+
+        .notification-panel {
+            position: absolute;
+            right: 0;
+            top: 52px;
+            width: 320px;
+            max-height: 430px;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            padding: 14px;
+            display: none;
+            flex-direction: column;
+            z-index: 30;
+        }
+
+        .notification-panel.visible {
+            display: flex;
+        }
+
+        .notification-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .notification-panel-header h5 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .mark-read-btn {
+            border: none;
+            background: none;
+            font-size: 13px;
+            color: #ff7b00;
+            cursor: pointer;
+        }
+
+        .notification-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            overflow-y: auto;
+            max-height: 360px;
+        }
+
+        .notification-item {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #f1f1f1;
+            margin-bottom: 10px;
+            background: #fff;
+            transition: background 0.2s ease;
+        }
+
+        .notification-item.unread {
+            background: #fff9f3;
+            border-color: #ffe1c7;
+        }
+
+        .notification-message {
+            font-size: 14px;
+            color: #2d3748;
+            margin-bottom: 6px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .notification-message strong {
+            color: #ff7b00;
+        }
+
+        .notification-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .notification-meta a {
+            color: #ff7b00;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .notification-empty {
+            font-size: 14px;
+            color: #718096;
+            text-align: center;
+            padding: 30px 10px;
+        }
+
+        .notification-meta .notification-recipe {
+            color: #ff7b00;
+            font-weight: 500;
+        }
+
+        .follow-btn {
+            margin-top: 12px;
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid #ff7b00;
+            background: white;
+            color: #ff7b00;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .follow-btn.is-following {
+            background: #ff7b00;
+            color: white;
+        }
+
+        /* ALL RECIPES PAGE */
+        .all-recipes-page {
+            display: flex;
+            gap: 50px;
+            padding: 120px 70px 70px;
+        }
+
+        /* SIDEBAR */
+        .filters {
+            width: 230px;
+            flex-shrink: 0;
+        }
+
+        .filters h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #2d3748;
+        }
+
+        .filter-group {
+            margin-bottom: 20px;
+        }
+
+        .filter-title {
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            font-size: 16px;
+            padding: 10px 0;
+            cursor: pointer;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .filter-content {
+            padding-left: 10px;
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 14px;
+        }
+
+        .filter-content.show {
+            display: flex;
+        }
+
+        .filter-content label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        /* MAIN LIST */
+        .recipes-list {
+            flex-grow: 1;
+        }
+
+        .recipes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .recipes-header h2 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .sort-select {
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            background: white;
+        }
+
+        /* GRID */
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        /* RECIPE CARD */
+        .recipe-card {
+            border: 1px solid #eee;
+            border-radius: 16px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+            transition: 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            cursor: pointer;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .recipe-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .recipe-content {
+            padding: 18px;
+        }
+
+        .recipe-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 14px;
+            color: #2d3748;
+        }
+
+        .recipe-info-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #444;
+            font-size: 14px;
+        }
+
+        .icon {
+            width: 16px;
+            opacity: 0.8;
+        }
+
+        .rating-row {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 14px;
+        }
+
+        .star {
+            width: 16px;
+        }
+
+        .rating-number {
+            margin-left: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .author-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .author-avatar {
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #eee;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .author-name {
+            font-size: 14px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .icon {
+            width: 16px !important;
+            height: 16px !important;
+            object-fit: contain;
+        }
+
+        .star {
+            width: 16px !important;
+            height: 16px !important;
+            object-fit: contain;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: #f7f7f7;
+            padding: 60px 60px 20px;
+            margin-top: 50px;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .footer-col a {
+            display: block;
+            color: #555;
+            margin-bottom: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.2s ease;
+        }
+
+        .footer-col a:hover {
+            color: #ff7b00;
+        }
+
+        .footer-desc {
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .footer-bottom {
+            margin-top: 40px;
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .footer-logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ff7b00;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="left-nav">
+            <div class="nav-logo">
+            <a href="{{ url_for('index') }}" style="text-decoration: none;"><span class="logo-text">FlavorVerse</span></a>
+            </div>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('allrecipes') }}">All Recipes</a>
+            <a href="{{ url_for('create_recipe_page') }}" class="btn-create-recipe">Create Recipe</a>
+            <!-- ĐÃ THÊM NÚT PROFILE -->
+            <a href="{{ url_for('userprofile') }}">My Profile</a>
+        </div>
+        <div class="right-nav">
+            <form class="search-box" action="{{ url_for('search') }}" method="GET">
+                <input type="text" name="q" placeholder="Search recipes..." required>
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+
+            {% if current_user.is_authenticated %}
+            <div class="notification-wrapper" id="notification-wrapper">
+                <button class="notification-button" id="notification-button">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notification-badge" hidden>0</span>
+                </button>
+                <div class="notification-panel" id="notification-panel">
+                    <div class="notification-panel-header">
+                        <h5>Thông báo</h5>
+                        <button class="mark-read-btn" id="mark-all-read">Đánh dấu đã đọc</button>
+                    </div>
+                    <div class="notification-empty" id="notification-empty">
+                        Chưa có thông báo nào.
+                    </div>
+                    <ul class="notification-list" id="notification-list"></ul>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if current_user.is_authenticated %}
+            <div class="user-menu">
+                <div class="user-avatar">
+                    {% if current_user.profile_picture %}
+                        <img src="{{ current_user.profile_picture }}" alt="Profile Picture">
+                    {% else %}
+                        <img src="https://randomuser.me/api/portraits/men/12.jpg" alt="User">
+                    {% endif %}
+                </div>
+                <span class="user-name">{{ current_user.username }}</span>
+                <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+            </div>
+            {% else %}
+            <div class="login-buttons">
+                <a href="{{ url_for('login') }}" class="login-btn">Đăng nhập</a>
+                <a href="{{ url_for('register') }}" class="register-btn">Đăng ký</a>
+            </div>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- ALL RECIPES CONTENT -->
+    <section class="all-recipes-page">
+        <!-- SIDEBAR FILTERS -->
+        <div class="filters">
+            <h3>Filter Recipes</h3>
+
+            <form id="filter-form" method="GET" action="{{ url_for('allrecipes') }}">
+                <div class="filter-group">
+                    <button class="filter-title" type="button" onclick="toggleFilter(this)">Difficulty ⌄</button>
+                    <div class="filter-content">
+                        <label><input type="radio" name="difficulty" value="" {% if not difficulty_filter %}checked{% endif %}> All</label>
+                        <label><input type="radio" name="difficulty" value="Easy" {% if difficulty_filter == 'Easy' %}checked{% endif %}> Easy</label>
+                        <label><input type="radio" name="difficulty" value="Medium" {% if difficulty_filter == 'Medium' %}checked{% endif %}> Medium</label>
+                        <label><input type="radio" name="difficulty" value="Hard" {% if difficulty_filter == 'Hard' %}checked{% endif %}> Hard</label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <button class="filter-title" type="button" onclick="toggleFilter(this)">Category ⌄</button>
+                    <div class="filter-content">
+                        <label><input type="radio" name="category" value="" {% if not category_filter %}checked{% endif %}> All</label>
+                        <label><input type="radio" name="category" value="Vietnamese" {% if category_filter == 'Vietnamese' %}checked{% endif %}> Vietnamese</label>
+                        <label><input type="radio" name="category" value="English" {% if category_filter == 'English' %}checked{% endif %}> English</label>
+                        <label><input type="radio" name="category" value="Italian" {% if category_filter == 'Italian' %}checked{% endif %}> Italian</label>
+                        <label><input type="radio" name="category" value="Chinese" {% if category_filter == 'Chinese' %}checked{% endif %}> Chinese</label>
+                        <label><input type="radio" name="category" value="Japanese" {% if category_filter == 'Japanese' %}checked{% endif %}> Japanese</label>
+                        <label><input type="radio" name="category" value="Thai" {% if category_filter == 'Thai' %}checked{% endif %}> Thai</label>
+                        <label><input type="radio" name="category" value="French" {% if category_filter == 'French' %}checked{% endif %}> French</label>
+                        <label><input type="radio" name="category" value="Mexican" {% if category_filter == 'Mexican' %}checked{% endif %}> Mexican</label>
+                        <label><input type="radio" name="category" value="Indian" {% if category_filter == 'Indian' %}checked{% endif %}> Indian</label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <button class="filter-title" type="button" onclick="toggleFilter(this)">Type ⌄</button>
+                    <div class="filter-content">
+                        <label><input type="radio" name="recipe_type" value="" {% if not recipe_type_filter %}checked{% endif %}> All</label>
+                        <label><input type="radio" name="recipe_type" value="food" {% if recipe_type_filter == 'food' %}checked{% endif %}> Food</label>
+                        <label><input type="radio" name="recipe_type" value="drink" {% if recipe_type_filter == 'drink' %}checked{% endif %}> Drink</label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <button class="filter-title" type="button" onclick="toggleFilter(this)">Cook Time ⌄</button>
+                    <div class="filter-content">
+                        <label><input type="radio" name="cooking_time" value="" {% if not cooking_time_filter %}checked{% endif %}> All</label>
+                        <label><input type="radio" name="cooking_time" value="under_15" {% if cooking_time_filter == 'under_15' %}checked{% endif %}> Under 15m</label>
+                        <label><input type="radio" name="cooking_time" value="under_30" {% if cooking_time_filter == 'under_30' %}checked{% endif %}> Under 30m</label>
+                        <label><input type="radio" name="cooking_time" value="under_60" {% if cooking_time_filter == 'under_60' %}checked{% endif %}> Under 1h</label>
+                    </div>
+                </div>
+
+                <button type="submit" style="width: 100%; padding: 10px; background: #ff7b00; color: white; border: none; border-radius: 6px; margin-top: 15px; cursor: pointer;">Apply Filters</button>
+            </form>
+        </div>
+
+        <!-- RECIPES LIST -->
+        <div class="recipes-list">
+            <div class="recipes-header">
+                <h2>All Recipes</h2>
+                <select class="sort-select">
+                    <option>Newest</option>
+                    <option>Oldest</option>
+                    <option>Most Popular</option>
+                </select>
+            </div>
+
+            <div class="recipes-grid">
+                {% for item in recipes %}
+                <a href="{{ url_for('recipe_details', recipe_id=item.recipe.id) }}" class="recipe-card">
+                    <img src="{{ item.recipe.image_url or 'https://i.pinimg.com/736x/f7/c4/72/f7c472ad678887044fc886a2b332f737.jpg' }}">
+                    <div class="recipe-content">
+                        <h4 class="recipe-title">{{ item.recipe.title }}</h4>
+                        <div class="recipe-info-row">
+                        <div class="info-item">
+                            <img src="{{ url_for('static', filename='img/clock.svg') }}" class="icon">
+                            <span>{{ item.recipe.cooking_time }} min</span>
+                        </div>
+                        <div class="info-item">
+                            <img src="{{ url_for('static', filename='img/fork-knife.svg') }}" class="icon">
+                            <span>{{ item.recipe.category }}</span>
+                        </div>
+                        </div>
+                        <div class="rating-row">
+                            {% for i in range(1, 6) %}
+                                {% if i <= item.avg_rating %}
+                                    <img src="{{ url_for('static', filename='img/star-filled.svg') }}" class="star">
+                                {% elif i - 0.5 <= item.avg_rating %}
+                                    <img src="{{ url_for('static', filename='img/star-half.svg') }}" class="star">
+                                {% else %}
+                                    <img src="{{ url_for('static', filename='img/star-empty.svg') }}" class="star">
+                                {% endif %}
+                            {% endfor %}
+                            <span class="rating-number">{{ "%.1f"|format(item.avg_rating) if item.avg_rating > 0 else "No ratings" }}</span>
+                        </div>
+                        <div class="author-row">
+                            <img class="author-avatar" src="{{ item.user.profile_picture or 'https://randomuser.me/api/portraits/men/{{ loop.index }}.jpg' }}">
+                            <span class="author-name">{{ item.user.username if item.user else 'Unknown' }}</span>
+                        </div>
+                        {% if current_user.is_authenticated and item.user and item.user.id != current_user.id %}
+                        <button
+                            class="follow-btn {% if item.is_following %}is-following{% endif %}"
+                            type="button"
+                            data-follow-btn
+                            data-user-id="{{ item.user.id }}"
+                            data-following="{{ 'true' if item.is_following else 'false' }}"
+                        >
+                            {{ 'Đang theo dõi' if item.is_following else 'Theo dõi' }}
+                        </button>
+                        {% endif %}
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <span class="footer-logo-text">FlavorVerse</span>
+                <p class="footer-desc">
+                    Discover, share, and savor the art of cooking with CookVerse.
+                </p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('allrecipes') }}">Recipes</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+            <div class="footer-col">
+                <h4>Categories</h4>
+                <a href="#">Appetizers</a>
+                <a href="#">Main Courses</a>
+                <a href="#">Desserts</a>
+                <a href="#">Beverages</a>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <a href="#">FAQ</a>
+                <a href="#">Help Center</a>
+                <a href="#">Feedback</a>
+            </div>
+        </div>
+    <div class="footer-bottom">© 2025 FlavorVerse. All rights reserved.</div>
+    </footer>
+
+    <script>
+        function toggleFilter(button) {
+            const content = button.nextElementSibling;
+            content.classList.toggle('show');
+        }
+    </script>
+    <script src="{{ url_for('static', filename='js/social.js') }}"></script>
+</body>
+</html>

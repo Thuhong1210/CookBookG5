@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlavorVerse Admin - Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+body{background:#f6f7fb;overflow-x:hidden;}
+.admin-container{display:flex;}
+
+/* SIDEBAR */
+.sidebar{
+    width:240px;background:#fff;min-height:100vh;border-right:1px solid #e5e5e5;padding:22px;
+}
+.sidebar-title{font-size:18px;font-weight:600;margin-bottom:24px;}
+.sidebar-menu{list-style:none;margin-top:10px;}
+.sidebar-item{
+    display:flex;align-items:center;gap:12px;
+    padding:12px;margin-bottom:4px;border-radius:8px;
+    cursor:pointer;font-size:15px;color:#333;transition:0.2s;
+}
+.sidebar-item i{font-size:18px;}
+.sidebar-item:hover{background:#f1f1f1;}
+.sidebar-item.active{background:#eef5ff;color:#2d6cdf;}
+
+/* MAIN */
+.main{flex-grow:1;padding:24px 40px;}
+
+/* TOPBAR */
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;}
+.search-box{
+    width:320px;padding:10px 14px;border:1px solid #ccc;border-radius:8px;
+}
+.topbar-right{display:flex;align-items:center;gap:16px;}
+.topbar-right i{font-size:20px;cursor:pointer;}
+.avatar{width:38px;height:38px;border-radius:50%;}
+
+/* DASHBOARD GRID */
+.cards-row{
+    display:flex;gap:24px;margin-bottom:30px;
+}
+.card{
+    background:#fff;border-radius:14px;border:1px solid #e4e4e4;
+    padding:20px;flex:1;
+}
+.card h3{font-size:14px;color:#555;margin-bottom:12px;}
+.card .value{font-size:26px;font-weight:700;margin-bottom:6px;}
+.card .sub{font-size:13px;color:#4caf50;}
+
+.section-title{
+    font-size:20px;font-weight:700;margin-bottom:14px;margin-top:10px;
+}
+
+/* RECENT BOXES */
+.box{
+    background:#fff;border-radius:14px;border:1px solid #e4e4e4;padding:20px;margin-bottom:26px;
+}
+.box-title{font-size:16px;font-weight:700;margin-bottom:16px;}
+.activity-item{margin-bottom:14px;font-size:14px;color:#333;}
+.activity-item span{color:#777;font-size:12px;display:block;margin-top:2px;}
+
+.recent-recipes{
+    display:flex;gap:18px;overflow-x:auto;padding-bottom:10px;
+}
+.recipe-card{
+    background:#fff;border:1px solid #eee;border-radius:10px;
+    width:180px;flex-shrink:0;padding-bottom:12px;
+}
+.recipe-card img{
+    width:100%;height:110px;border-radius:10px 10px 0 0;object-fit:cover;
+}
+.recipe-card-title{font-size:14px;font-weight:600;margin:10px;}
+.recipe-card-author{font-size:12px;color:#777;margin-left:10px;margin-top:-6px;}
+.recipe-badge{
+    font-size:11px;background:#ffe8e6;color:#d64b3b;padding:4px 10px;border-radius:10px;margin-left:10px;
+}
+
+/* FOOTER */
+footer{
+    text-align:center;color:#888;font-size:14px;margin-top:30px;padding-bottom:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="admin-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h2 class="sidebar-title">Dashboard</h2>
+
+        <ul class="sidebar-menu">
+            <li class="sidebar-item active"><i class="ri-dashboard-line"></i>Dashboard</li>
+            <li class="sidebar-item"><i class="ri-user-line"></i>Users</li>
+            <li class="sidebar-item"><i class="ri-restaurant-line"></i>Recipes</li>
+            <li class="sidebar-item"><i class="ri-chat-3-line"></i>Comments</li>
+            <li class="sidebar-item"><i class="ri-bar-chart-line"></i>Reports</li>
+            <li class="sidebar-item"><i class="ri-book-open-line"></i>Cookbooks</li>
+            <li class="sidebar-item"><i class="ri-price-tag-3-line"></i>Categories & Tags</li>
+            <li class="sidebar-item"><i class="ri-time-line"></i>Activity Logs</li>
+            <li class="sidebar-item"><i class="ri-notification-3-line"></i>Notifications</li>
+            <li class="sidebar-item"><i class="ri-settings-3-line"></i>System Settings</li>
+        </ul>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <input type="text" placeholder="Search..." class="search-box">
+            <div class="topbar-right">
+                <i class="ri-notification-3-line"></i>
+                <i class="ri-settings-3-line"></i>
+                <img src="https://randomuser.me/api/portraits/men/22.jpg" class="avatar">
+            </div>
+        </div>
+
+        <h1 class="section-title" style="font-size:24px;">Dashboard Overview</h1>
+        <p style="color:#777;font-size:14px;margin-bottom:20px;">
+            A comprehensive look at FlavorVerse Admin’s key metrics, recent activities, and system health.
+        </p>
+
+        <!-- TOP CARDS -->
+        <div class="cards-row">
+            <div class="card">
+                <h3>Total Users</h3>
+                <div class="value">8,765</div>
+                <div class="sub">+12% from last month</div>
+            </div>
+
+            <div class="card">
+                <h3>Active Recipes</h3>
+                <div class="value">3,120</div>
+                <div class="sub">+8% from last month</div>
+            </div>
+
+            <div class="card">
+                <h3>Pending Recipes</h3>
+                <div class="value">45</div>
+                <div class="sub">-5 from yesterday</div>
+            </div>
+
+            <div class="card">
+                <h3>Reports Filed</h3>
+                <div class="value">18</div>
+                <div class="sub">No change</div>
+            </div>
+        </div>
+
+        <!-- RECENT ACTIVITY -->
+        <div class="box">
+            <div class="box-title">Recent Activity</div>
+
+            <div class="activity-item">
+                <b>Admin Jane</b> approved recipe “Hearty Lentil Soup”
+                <span>2 hours ago</span>
+            </div>
+
+            <div class="activity-item">
+                <b>User ChefAlex</b> posted a comment on “Spicy Tuna Rolls”
+                <span>4 hours ago</span>
+            </div>
+
+            <div class="activity-item">
+                <b>User FoodieFan</b> reported recipe “Gluten-Free Pancakes”
+                <span>1 day ago</span>
+            </div>
+
+            <div class="activity-item">
+                <b>Admin John</b> suspended user “RecipeSpammer”
+                <span>2 days ago</span>
+            </div>
+        </div>
+
+        <!-- RECENT RECIPES -->
+        <div class="box">
+            <div class="box-title">Recent Recipes</div>
+
+            <div class="recent-recipes">
+
+                <div class="recipe-card">
+                    <img src="https://i.pinimg.com/736x/9c/a5/d4/9ca5d4cc6e97913e0c857c568c4f7066.jpg">
+                    <p class="recipe-card-title">Blueberry Bliss</p>
+                    <p class="recipe-card-author">By Emma’s Kitchen</p>
+                    <span class="recipe-badge">Approved</span>
+                </div>
+
+                <div class="recipe-card">
+                    <img src="https://i.pinimg.com/736x/3c/71/6b/3c716bca7d8d5c2c932a0f4f57f72757.jpg">
+                    <p class="recipe-card-title">Seared Salmon</p>
+                    <p class="recipe-card-author">By Gourmet Delights</p>
+                    <span class="recipe-badge">Approved</span>
+                </div>
+
+                <div class="recipe-card">
+                    <img src="https://i.pinimg.com/736x/b0/4b/44/b04b44e0f0d216e8acccb79b7d95ad02.jpg">
+                    <p class="recipe-card-title">Avocado Toast</p>
+                    <p class="recipe-card-author">By Brunch Lover</p>
+                    <span class="recipe-badge" style="background:#fff3bf;color:#d99a00;">Pending</span>
+                </div>
+
+                <div class="recipe-card">
+                    <img src="https://i.pinimg.com/736x/cd/18/6a/cd186aba496d4f312abbf1ba2c142d3f.jpg">
+                    <p class="recipe-card-title">Spicy Miso Ramen</p>
+                    <p class="recipe-card-author">By Noodle Master</p>
+                    <span class="recipe-badge">Approved</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer>© 2025 FlavorVerse Admin. All rights reserved.</footer>
+
+    </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Recipe - FlavorVerse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* RESET */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+            color: #222;
+            line-height: 1.6;
+        }
+
+        /* HEADER */
+        header {
+            width: 100%;
+            padding: 16px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            position: fixed;
+            top: 0;
+            z-index: 20;
+            border-bottom: 1px solid #e9ecef;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff7b00;
+            letter-spacing: -0.5px;
+        }
+
+        .left-nav a {
+            text-decoration: none;
+            color: #333;
+            font-size: 15px;
+            font-weight: 500;
+            transition: 0.2s ease;
+        }
+
+        .left-nav a:hover {
+            color: #ff7b00;
+        }
+
+        .right-nav {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            width: 260px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 6px 12px;
+            background: #fff;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .btn-create-recipe {
+            padding: 8px 18px;
+            background: #ff7b00;
+            color: white;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-create-recipe:hover {
+            background: #e66e00;
+        }
+
+        /* CREATE RECIPE FORM */
+        .create-recipe-section {
+            padding: 120px 60px 80px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #2d3748;
+        }
+
+        .section-header p {
+            font-size: 16px;
+            color: #718096;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .recipe-form {
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #f1f3f4;
+        }
+
+        .form-section:last-of-type {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::before {
+            content: "";
+            width: 4px;
+            height: 20px;
+            background: #ff7b00;
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            background: #fff;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #ff7b00;
+            box-shadow: 0 0 0 3px rgba(255, 123, 0, 0.15);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Ingredients Table */
+        .ingredients-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+        }
+
+        .ingredients-table th {
+            text-align: left;
+            padding: 12px 8px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 14px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .ingredients-table td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .ingredients-table input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .ingredients-table input:focus {
+            border-color: #ff7b00;
+            outline: none;
+        }
+
+        /* Instructions */
+        .instruction-step {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid #ff7b00;
+        }
+
+        .step-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .step-number {
+            font-weight: 600;
+            color: #ff7b00;
+            font-size: 16px;
+        }
+
+        .step-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Tags */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .tag {
+            background: #e2e8f0;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tag-remove {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #718096;
+            font-size: 16px;
+        }
+
+        .tag-input-container {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tag-input-container select {
+            flex: 1;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: #ff7b00;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #e66e00;
+        }
+
+        .btn-secondary {
+            background: #718096;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4a5568;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-outline:hover {
+            border-color: #ff7b00;
+            color: #ff7b00;
+        }
+
+        .btn-danger {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c53030;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #f1f3f4;
+        }
+
+        /* Upload area */
+        .upload-area {
+            border: 2px dashed #e2e8f0;
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #fafbfc;
+        }
+
+        .upload-area:hover {
+            border-color: #ff7b00;
+            background: #fff9f0;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #cbd5e0;
+            margin-bottom: 12px;
+        }
+
+        .upload-text {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .upload-text strong {
+            color: #ff7b00;
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="left-nav">
+            <div class="nav-logo">
+                <a href="home.html" style="text-decoration: none;"><span class="logo-text">FlavorVerse</span></a>
+            </div>
+            <a href="home.html">Home</a>
+            <a href="allrecipes.html">All Recipes</a>
+            <a href="create-recipe.html" class="btn-create-recipe">Create Recipe</a>
+        </div>
+        <div class="right-nav">
+            <div class="search-box">
+                <input type="text" placeholder="Search recipes...">
+            </div>
+            <div class="user-menu">
+                <div class="user-avatar">
+                    <img src="https://randomuser.me/api/portraits/men/12.jpg" alt="User">
+                </div>
+                <span class="user-name">Nguyen Ngoc Anh</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- CREATE RECIPE FORM -->
+    <section class="create-recipe-section">
+        <div class="section-header">
+            <h1>Share Your Culinary Masterpiece</h1>
+            <p>This will be decided below to add your unique notice to PlanetView. Neither offers with your cooking!</p>
+        </div>
+
+        <form class="recipe-form">
+            <!-- Basic Information Section -->
+            <div class="form-section">
+                <h2 class="section-title">Basic Information</h2>
+                
+                <div class="form-group">
+                    <label>Recipe Image</label>
+                    <div class="upload-area">
+                        <div class="upload-icon">📷</div>
+                        <div class="upload-text">Click to upload images or <strong>drag and drop</strong></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="recipe-title">Recipe Title</label>
+                    <input type="text" id="recipe-title" placeholder="Enter your recipe title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="recipe-description">Description</label>
+                    <textarea id="recipe-description" placeholder="A brief and appealing description of your recipe."></textarea>
+                </div>
+            </div>
+
+            <!-- Recipe Details Section -->
+            <div class="form-section">
+                <h2 class="section-title">Recipe Details</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="prep-time">Prep Time (minutes)</label>
+                        <input type="number" id="prep-time" placeholder="15">
+                    </div>
+                    <div class="form-group">
+                        <label for="cook-time">Cook Time (minutes)</label>
+                        <input type="number" id="cook-time" placeholder="45">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Difficulty</label>
+                    <div style="display: flex; gap: 16px;">
+                        <label style="display: flex; align-items: center; gap: 6px;">
+                            <input type="radio" name="difficulty" value="easy"> Easy
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px;">
+                            <input type="radio" name="difficulty" value="medium" checked> Medium
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px;">
+                            <input type="radio" name="difficulty" value="hard"> Hard
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ingredients Section -->
+            <div class="form-section">
+                <h2 class="section-title">Ingredients</h2>
+                
+                <table class="ingredients-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Quantity</th>
+                            <th>Unit</th>
+                            <th width="60"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="ingredients-body">
+                        <tr>
+                            <td><input type="text" placeholder="Chicken Breast"></td>
+                            <td><input type="number" placeholder="2"></td>
+                            <td>
+                                <select>
+                                    <option>pieces</option>
+                                    <option>cups</option>
+                                    <option>tbsp</option>
+                                    <option>tsp</option>
+                                    <option>ml</option>
+                                    <option>grams</option>
+                                </select>
+                            </td>
+                            <td><button type="button" class="btn btn-danger btn-sm">×</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" placeholder="Garlic Cloves"></td>
+                            <td><input type="number" placeholder="5"></td>
+                            <td>
+                                <select>
+                                    <option>pieces</option>
+                                    <option selected>cloves</option>
+                                    <option>tbsp</option>
+                                    <option>tsp</option>
+                                    <option>ml</option>
+                                    <option>grams</option>
+                                </select>
+                            </td>
+                            <td><button type="button" class="btn btn-danger btn-sm">×</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" placeholder="Soy Sauce"></td>
+                            <td><input type="number" placeholder="25"></td>
+                            <td>
+                                <select>
+                                    <option>pieces</option>
+                                    <option>cups</option>
+                                    <option selected>ml</option>
+                                    <option>tsp</option>
+                                    <option>tbsp</option>
+                                    <option>grams</option>
+                                </select>
+                            </td>
+                            <td><button type="button" class="btn btn-danger btn-sm">×</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <button type="button" class="btn btn-outline" id="add-ingredient">+ Add Ingredient</button>
+            </div>
+
+            <!-- Instructions Section -->
+            <div class="form-section">
+                <h2 class="section-title">Instructions</h2>
+                
+                <div id="instructions-container">
+                    <div class="instruction-step">
+                        <div class="step-header">
+                            <span class="step-number">Step 1</span>
+                            <div class="step-actions">
+                                <button type="button" class="btn btn-outline btn-sm">📷 Add Photo</button>
+                                <button type="button" class="btn btn-danger btn-sm">×</button>
+                            </div>
+                        </div>
+                        <textarea placeholder="Cut the chicken breast into bite-sized pieces and mince the garlic." rows="3"></textarea>
+                    </div>
+
+                    <div class="instruction-step">
+                        <div class="step-header">
+                            <span class="step-number">Step 2</span>
+                            <div class="step-actions">
+                                <button type="button" class="btn btn-outline btn-sm">📷 Add Photo</button>
+                                <button type="button" class="btn btn-danger btn-sm">×</button>
+                            </div>
+                        </div>
+                        <textarea placeholder="In a large bowl, heat olive oil over medium heat. Add chicken and cook until browned." rows="3"></textarea>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-outline" id="add-step">+ Add Step</button>
+            </div>
+
+            <!-- Tags Section -->
+            <div class="form-section">
+                <h2 class="section-title">Tags</h2>
+                
+                <div class="tags-container" id="tags-container">
+                    <div class="tag">
+                        Vietnamese
+                        <button type="button" class="tag-remove">×</button>
+                    </div>
+                    <div class="tag">
+                        Spicy
+                        <button type="button" class="tag-remove">×</button>
+                    </div>
+                </div>
+
+                <div class="tag-input-container">
+                    <select id="tag-select">
+                        <option>Select a tag</option>
+                        <option>Vietnamese</option>
+                        <option>Italian</option>
+                        <option>Japanese</option>
+                        <option>Spicy</option>
+                        <option>Healthy</option>
+                        <option>Quick & Easy</option>
+                        <option>Vegetarian</option>
+                        <option>Gluten-Free</option>
+                    </select>
+                    <button type="button" class="btn btn-primary" id="add-tag">Add Tag</button>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="window.location.href='home.html'">Cancel</button>
+                <button type="submit" class="btn btn-primary">Create Recipe</button>
+            </div>
+        </form>
+    </section>
+
+    <script>
+        // Add ingredient row
+        document.getElementById('add-ingredient').addEventListener('click', function() {
+            const tbody = document.getElementById('ingredients-body');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><input type="text" placeholder="Ingredient name"></td>
+                <td><input type="number" placeholder="Quantity"></td>
+                <td>
+                    <select>
+                        <option>pieces</option>
+                        <option>cups</option>
+                        <option>tbsp</option>
+                        <option>tsp</option>
+                        <option>ml</option>
+                        <option>grams</option>
+                    </select>
+                </td>
+                <td><button type="button" class="btn btn-danger btn-sm">×</button></td>
+            `;
+            tbody.appendChild(row);
+            
+            // Add remove functionality
+            row.querySelector('.btn-danger').addEventListener('click', function() {
+                tbody.removeChild(row);
+            });
+        });
+
+        // Add instruction step
+        document.getElementById('add-step').addEventListener('click', function() {
+            const container = document.getElementById('instructions-container');
+            const stepCount = container.children.length + 1;
+            const step = document.createElement('div');
+            step.className = 'instruction-step';
+            step.innerHTML = `
+                <div class="step-header">
+                    <span class="step-number">Step ${stepCount}</span>
+                    <div class="step-actions">
+                        <button type="button" class="btn btn-outline btn-sm">📷 Add Photo</button>
+                        <button type="button" class="btn btn-danger btn-sm">×</button>
+                    </div>
+                </div>
+                <textarea placeholder="Describe this step..." rows="3"></textarea>
+            `;
+            container.appendChild(step);
+            
+            // Add remove functionality
+            step.querySelector('.btn-danger').addEventListener('click', function() {
+                container.removeChild(step);
+                // Update step numbers
+                const steps = container.querySelectorAll('.instruction-step');
+                steps.forEach((stepEl, index) => {
+                    stepEl.querySelector('.step-number').textContent = `Step ${index + 1}`;
+                });
+            });
+        });
+
+        // Add tag
+        document.getElementById('add-tag').addEventListener('click', function() {
+            const select = document.getElementById('tag-select');
+            const tagValue = select.value;
+            const container = document.getElementById('tags-container');
+            
+            if (tagValue && tagValue !== 'Select a tag') {
+                const tag = document.createElement('div');
+                tag.className = 'tag';
+                tag.innerHTML = `
+                    ${tagValue}
+                    <button type="button" class="tag-remove">×</button>
+                `;
+                container.appendChild(tag);
+                
+                // Add remove functionality
+                tag.querySelector('.tag-remove').addEventListener('click', function() {
+                    container.removeChild(tag);
+                });
+                
+                select.value = 'Select a tag';
+            }
+        });
+
+        // Remove existing tags
+        document.querySelectorAll('.tag-remove').forEach(button => {
+            button.addEventListener('click', function() {
+                this.parentElement.remove();
+            });
+        });
+
+        // Remove existing ingredient rows
+        document.querySelectorAll('.ingredients-table .btn-danger').forEach(button => {
+            button.addEventListener('click', function() {
+                this.closest('tr').remove();
+            });
+        });
+
+        // Remove existing instruction steps
+        document.querySelectorAll('.instruction-step .btn-danger').forEach(button => {
+            button.addEventListener('click', function() {
+                const step = this.closest('.instruction-step');
+                const container = document.getElementById('instructions-container');
+                container.removeChild(step);
+                
+                // Update step numbers
+                const steps = container.querySelectorAll('.instruction-step');
+                steps.forEach((stepEl, index) => {
+                    stepEl.querySelector('.step-number').textContent = `Step ${index + 1}`;
+                });
+            });
+        });
+
+        // Form submission
+        document.querySelector('.recipe-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Recipe created successfully!');
+            window.location.href = 'home.html';
+        });
+    </script>
+</body>
+</html>

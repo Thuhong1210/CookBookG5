@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ recipe.title }} - FlavorVerse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        /* Header */
+        header {
+            width: 100%;
+            padding: 16px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            position: fixed;
+            top: 0;
+            z-index: 20;
+            border-bottom: 1px solid #e9ecef;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff7b00;
+            letter-spacing: -0.5px;
+        }
+
+        .left-nav a {
+            text-decoration: none;
+            color: #333;
+            font-size: 15px;
+            font-weight: 500;
+            transition: 0.2s ease;
+        }
+
+        .left-nav a:hover {
+            color: #ff7b00;
+        }
+
+        .right-nav {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            width: 260px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 6px 12px;
+            background: #fff;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .search-box button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #ff7b00;
+            font-size: 16px;
+            margin-left: 8px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .btn-create-recipe {
+            padding: 8px 18px;
+            background: #ff7b00;
+            color: white;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-create-recipe:hover {
+            background: #e66e00;
+        }
+
+        .login-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .login-btn {
+            padding: 8px 16px;
+            color: #ff7b00;
+            border: 1.5px solid #ff7b00;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .register-btn {
+            padding: 8px 16px;
+            background: #ff7b00;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            padding: 6px 12px;
+            background: #ff4444;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .notification-wrapper {
+            position: relative;
+        }
+
+        .notification-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            color: #ff7b00;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -4px;
+            background: #ff4444;
+            color: #fff;
+            font-size: 11px;
+            border-radius: 999px;
+            padding: 2px 6px;
+        }
+
+        .notification-panel {
+            position: absolute;
+            right: 0;
+            top: 52px;
+            width: 320px;
+            max-height: 430px;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            padding: 14px;
+            display: none;
+            flex-direction: column;
+            z-index: 30;
+        }
+
+        .notification-panel.visible {
+            display: flex;
+        }
+
+        .notification-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .notification-panel-header h5 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .mark-read-btn {
+            border: none;
+            background: none;
+            font-size: 13px;
+            color: #ff7b00;
+            cursor: pointer;
+        }
+
+        .notification-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            overflow-y: auto;
+            max-height: 360px;
+        }
+
+        .notification-item {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #f1f1f1;
+            margin-bottom: 10px;
+            background: #fff;
+            transition: background 0.2s ease;
+        }
+
+        .notification-item.unread {
+            background: #fff9f3;
+            border-color: #ffe1c7;
+        }
+
+        .notification-message {
+            font-size: 14px;
+            color: #2d3748;
+            margin-bottom: 6px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .notification-message strong {
+            color: #ff7b00;
+        }
+
+        .notification-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .notification-meta a {
+            color: #ff7b00;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .notification-empty {
+            font-size: 14px;
+            color: #718096;
+            text-align: center;
+            padding: 30px 10px;
+        }
+
+        .notification-meta .notification-recipe {
+            color: #ff7b00;
+            font-weight: 500;
+        }
+
+        .follow-btn {
+            padding: 10px 22px;
+            border-radius: 8px;
+            border: 1px solid #ff7b00;
+            background: white;
+            color: #ff7b00;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .follow-btn.is-following {
+            background: #ff7b00;
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 90px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px;
+        }
+
+        .recipe-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+            align-items: start;
+        }
+
+        .recipe-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .recipe-info {
+            padding: 20px 0;
+        }
+
+        .recipe-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #222;
+        }
+
+        .recipe-meta {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-size: 16px;
+        }
+
+        .meta-item i {
+            color: #ff7b00;
+        }
+
+        .recipe-description {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            color: #555;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .btn-secondary {
+            padding: 10px 20px;
+            background: #f0f0f0;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .rating-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .rating-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stars {
+            display: flex;
+            gap: 2px;
+        }
+
+        .star {
+            width: 20px;
+            height: 20px;
+        }
+
+        .rating-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        /* Recipe Content */
+        .recipe-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .ingredients-section, .instructions-section {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #222;
+        }
+
+        .ingredients-list {
+            list-style: none;
+        }
+
+        .ingredients-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            line-height: 1.5;
+        }
+
+        .ingredients-list li:last-child {
+            border-bottom: none;
+        }
+
+        .instructions-list {
+            counter-reset: step-counter;
+        }
+
+        .instructions-list li {
+            counter-increment: step-counter;
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f0f0;
+            line-height: 1.6;
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .instructions-list li:last-child {
+            border-bottom: none;
+        }
+
+        .instructions-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 16px;
+            width: 24px;
+            height: 24px;
+            background: #ff7b00;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Rating and Comments */
+        .reviews-section {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 40px;
+        }
+
+        .reviews-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .reviews-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .reviews-count {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .rating-form, .comment-form {
+            margin-bottom: 24px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .rating-input {
+            display: flex;
+            gap: 8px;
+        }
+
+        .rating-input input[type="radio"] {
+            display: none;
+        }
+
+        .rating-input label {
+            cursor: pointer;
+            font-size: 24px;
+            color: #ddd;
+            transition: 0.2s;
+        }
+
+        .rating-input label.hover,
+        .rating-input label.active {
+            color: #ff7b00;
+        }
+
+        .comment-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .btn-submit {
+            padding: 10px 20px;
+            background: #ff7b00;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s ease;
+        }
+
+        .btn-submit:hover {
+            background: #e66e00;
+        }
+
+        .comments-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .comment-item {
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .comment-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .comment-author {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .comment-header-main {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .comment-date {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .comment-rating {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 8px;
+        }
+
+        .comment-text {
+            line-height: 1.5;
+            color: #555;
+        }
+
+        .comment-actions form {
+            margin: 0;
+        }
+
+        .btn-comment-delete {
+            border: 1px solid #ff7b00;
+            background: transparent;
+            color: #ff7b00;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .btn-comment-delete:hover {
+            background: #ff7b00;
+            color: white;
+        }
+
+        .rating-log {
+            margin-top: 20px;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 20px;
+        }
+
+        .rating-log h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .rating-log-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .rating-log-item:last-child {
+            border-bottom: none;
+        }
+
+        .rating-log-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .rating-log-stars {
+            color: #ff7b00;
+            font-weight: 600;
+        }
+
+        .rating-log-time {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .rating-log form {
+            margin: 0;
+        }
+
+        .btn-rating-delete {
+            border: 1px solid #ff4444;
+            background: transparent;
+            color: #ff4444;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .btn-rating-delete:hover {
+            background: #ff4444;
+            color: white;
+        }
+
+        /* Related Recipes */
+        .related-section {
+            margin-bottom: 40px;
+        }
+
+        .related-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .related-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: 0.2s ease;
+            cursor: pointer;
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        }
+
+        .related-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .related-card-content {
+            padding: 16px;
+        }
+
+        .related-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .related-card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Footer */
+        .footer {
+            background: #f7f7f7;
+            padding: 60px 60px 20px;
+            margin-top: 50px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .footer-col a {
+            display: block;
+            color: #555;
+            margin-bottom: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.2s ease;
+        }
+
+        .footer-col a:hover {
+            color: #ff7b00;
+        }
+
+        .footer-desc {
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .footer-bottom {
+            margin-top: 40px;
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .footer-logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ff7b00;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .recipe-header {
+                grid-template-columns: 1fr;
+            }
+
+            .recipe-content {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                padding: 16px 20px;
+            }
+
+            .left-nav {
+                gap: 16px;
+            }
+
+            .search-box {
+                width: 200px;
+            }
+
+            .main-content {
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="left-nav">
+            <div class="nav-logo">
+                <a href="{{ url_for('index') }}" style="text-decoration: none;"><span class="logo-text">FlavorVerse</span></a>
+            </div>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('allrecipes') }}">All Recipes</a>
+            <a href="{{ url_for('create_recipe_page') }}" class="btn-create-recipe">Create Recipe</a>
+            <a href="{{ url_for('userprofile') }}">My Profile</a>
+        </div>
+
+        <div class="right-nav">
+            <form class="search-box" action="{{ url_for('search') }}" method="GET">
+                <input type="text" name="q" placeholder="Search recipes..." required>
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+
+            {% if current_user.is_authenticated %}
+            <div class="notification-wrapper" id="notification-wrapper">
+                <button class="notification-button" id="notification-button">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notification-badge" hidden>0</span>
+                </button>
+                <div class="notification-panel" id="notification-panel">
+                    <div class="notification-panel-header">
+                        <h5>Thông báo</h5>
+                        <button class="mark-read-btn" id="mark-all-read">Đánh dấu đã đọc</button>
+                    </div>
+                    <div class="notification-empty" id="notification-empty">
+                        Chưa có thông báo nào.
+                    </div>
+                    <ul class="notification-list" id="notification-list"></ul>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if current_user.is_authenticated %}
+            <div class="user-menu">
+            <div class="user-avatar">
+                {% if current_user.profile_picture %}
+                    <img src="{{ current_user.profile_picture }}" alt="Profile Picture">
+                {% else %}
+                    <img src="https://randomuser.me/api/portraits/men/12.jpg" alt="User">
+                {% endif %}
+            </div>
+            <span class="user-name">{{ current_user.username }}</span>
+                <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+            </div>
+            {% else %}
+            <div class="login-buttons">
+                <a href="{{ url_for('login') }}" class="login-btn">Đăng nhập</a>
+                <a href="{{ url_for('register') }}" class="register-btn">Đăng ký</a>
+            </div>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="recipe-header">
+            <img src="{{ recipe.image_url or 'https://i.pinimg.com/736x/f7/c4/72/f7c472ad678887044fc886a2b332f737.jpg' }}" alt="{{ recipe.title }}" class="recipe-image">
+            <div class="recipe-info">
+                <h1 class="recipe-title">{{ recipe.title }}</h1>
+                <div class="recipe-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>{{ recipe.cooking_time }} min</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-utensils"></i>
+                        <span>{{ recipe.difficulty }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-tag"></i>
+                        <span>{{ recipe.category }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>{{ recipe.user.username if recipe.user else 'Unknown' }}</span>
+                    </div>
+                </div>
+                <p class="recipe-description">{{ recipe.description }}</p>
+
+                <div class="action-buttons">
+                    {% if current_user.is_authenticated %}
+                    <form action="{{ url_for('favorite_recipe', recipe_id=recipe.id) }}" method="POST" style="display: inline;">
+                        <button type="submit" class="btn-secondary">
+                            <i class="fas fa-{% if is_bookmarked %}solid{% else %}regular{% endif %} fa-bookmark"></i>
+                            {{ 'Unbookmark' if is_bookmarked else 'Bookmark' }}
+                        </button>
+                    </form>
+                    {% if current_user.id == recipe.user_id %}
+                    <a href="{{ url_for('edit_recipe', recipe_id=recipe.id) }}" class="btn-secondary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    {% endif %}
+                    {% if recipe.user_id != current_user.id %}
+                    <button
+                        class="follow-btn {% if is_following_author %}is-following{% endif %}"
+                        type="button"
+                        data-follow-btn
+                        data-user-id="{{ recipe.user_id }}"
+                        data-following="{{ 'true' if is_following_author else 'false' }}"
+                    >
+                        {{ 'Đang theo dõi' if is_following_author else 'Theo dõi tác giả' }}
+                    </button>
+                    {% endif %}
+                    {% endif %}
+                </div>
+
+        <div class="rating-section">
+                    <div class="rating-display">
+                        <div class="stars">
+                            {% for i in range(1, 6) %}
+                                {% if i <= avg_rating %}
+                                    <img src="{{ url_for('static', filename='img/star-filled.svg') }}" class="star" alt="Star">
+                                {% elif i - 0.5 <= avg_rating %}
+                                    <img src="{{ url_for('static', filename='img/star-half.svg') }}" class="star" alt="Half star">
+                                {% else %}
+                                    <img src="{{ url_for('static', filename='img/star-empty.svg') }}" class="star" alt="Empty star">
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <span class="rating-text">{{ "%.1f"|format(avg_rating) if avg_rating > 0 else "No ratings" }} ({{ rating_count }} reviews)</span>
+                    </div>
+                </div>
+
+        {% if ratings %}
+        <div class="rating-log">
+            <h3>Chi tiết đánh giá</h3>
+            {% for rating in ratings %}
+            {% set can_delete_rating = current_user.is_authenticated and (current_user.id == rating.user_id or current_user.id == recipe.user_id or current_user.is_admin) %}
+            <div class="rating-log-item">
+                <div class="rating-log-info">
+                    <strong>{{ rating.user.username if rating.user else 'Ẩn danh' }}</strong>
+                    <span class="rating-log-stars">{{ rating.rating }} ★</span>
+                    <span class="rating-log-time">{{ rating.created_at.strftime('%d/%m/%Y %H:%M') if rating.created_at else '' }}</span>
+                </div>
+                {% if can_delete_rating %}
+                <form action="{{ url_for('delete_rating_entry', recipe_id=recipe.id, rating_id=rating.id) }}" method="POST" onsubmit="return confirm('Xoá đánh giá này?');">
+                    <button type="submit" class="btn-rating-delete">Xoá</button>
+                </form>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+            </div>
+        </div>
+
+        <div class="recipe-content">
+            <div class="ingredients-section">
+                <h2 class="section-title">Ingredients</h2>
+                <ul class="ingredients-list">
+                    {% for ingredient in recipe.ingredients.split('\n') %}
+                        {% if ingredient.strip() %}
+                        <li>{{ ingredient.strip() }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="instructions-section">
+                <h2 class="section-title">Instructions</h2>
+                <ol class="instructions-list">
+                    {% for instruction in recipe.instructions.split('\n') %}
+                        {% if instruction.strip() %}
+                        <li>{{ instruction.strip() }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+
+        <div class="reviews-section">
+            <div class="reviews-header">
+                <h2 class="reviews-title">Reviews & Comments</h2>
+                <span class="reviews-count">{{ comments|length }} comments</span>
+            </div>
+
+            {% if current_user.is_authenticated %}
+            <!-- Rating Form -->
+            <div class="rating-form">
+                <h3>Rate this recipe</h3>
+                <form action="{{ url_for('rate_recipe', recipe_id=recipe.id) }}" method="POST">
+                    <div class="form-group">
+                        <label>Your Rating:</label>
+                        <div class="rating-input">
+                            {% for i in range(1, 6) %}
+                            <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}" required>
+                            <label for="star{{ i }}">&#9733;</label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit">Submit Rating</button>
+                </form>
+            </div>
+
+            <!-- Comment Form -->
+            <div class="comment-form">
+                <h3>Leave a comment</h3>
+                <form action="{{ url_for('comment_recipe', recipe_id=recipe.id) }}" method="POST">
+                    <div class="form-group">
+                        <label for="comment">Your Comment:</label>
+                        <textarea id="comment" name="comment" class="comment-textarea" rows="4" placeholder="Share your thoughts about this recipe..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Post Comment</button>
+                </form>
+            </div>
+            {% else %}
+            <p style="text-align: center; color: #666; padding: 20px;">Please <a href="{{ url_for('login') }}">log in</a> to rate and comment on recipes.</p>
+            {% endif %}
+
+            <!-- Comments List -->
+            <div class="comments-list">
+                {% for item in comments %}
+                <div class="comment-item">
+                    {% set can_delete_comment = current_user.is_authenticated and (current_user.id == item.comment.user_id or current_user.id == recipe.user_id or current_user.is_admin) %}
+                    <div class="comment-header">
+                        <div class="comment-header-main">
+                            <img src="https://randomuser.me/api/portraits/men/{{ loop.index }}.jpg" alt="Avatar" class="comment-avatar">
+                            <span class="comment-author">{{ item.user.username if item.user else 'Anonymous' }}</span>
+                            <span class="comment-date">{{ item.comment.created_at.strftime('%b %d, %Y') }}</span>
+                        </div>
+                        {% if can_delete_comment %}
+                        <div class="comment-actions">
+                            <form action="{{ url_for('delete_comment_entry', recipe_id=recipe.id, comment_id=item.comment.id) }}" method="POST" onsubmit="return confirm('Xoá bình luận này?');">
+                                <button type="submit" class="btn-comment-delete">Xoá</button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% if item.rating %}
+                    <div class="comment-rating">
+                        {% for i in range(1, 6) %}
+                            {% if i <= item.rating %}
+                                <img src="{{ url_for('static', filename='img/star-filled.svg') }}" class="star" alt="Star">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='img/star-empty.svg') }}" class="star" alt="Empty star">
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <p class="comment-text">{{ item.comment.comment }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Related Recipes -->
+        <div class="related-section">
+            <h2 class="related-title">You might also like</h2>
+            <div class="related-grid">
+                {% for item in related_recipes %}
+                <div class="related-card" onclick="window.location.href='{{ url_for('recipe_details', recipe_id=item.recipe.id) }}'">
+                    <img src="{{ item.recipe.image_url or 'https://i.pinimg.com/736x/f7/c4/72/f7c472ad678887044fc886a2b332f737.jpg' }}" alt="{{ item.recipe.title }}">
+                    <div class="related-card-content">
+                        <h3 class="related-card-title">{{ item.recipe.title }}</h3>
+                        <div class="related-card-meta">
+                            <span>{{ item.recipe.cooking_time }} min</span>
+                            <span>{{ "%.1f"|format(item.avg_rating) if item.avg_rating > 0 else "No rating" }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <span class="footer-logo-text">FlavorVerse</span>
+                <p class="footer-desc">
+                    Discover, share, and savor the art of cooking with FlavorVerse.
+                </p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('allrecipes') }}">Recipes</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+            <div class="footer-col">
+                <h4>Categories</h4>
+                <a href="#">Appetizers</a>
+                <a href="#">Main Courses</a>
+                <a href="#">Desserts</a>
+                <a href="#">Beverages</a>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <a href="#">FAQ</a>
+                <a href="#">Help Center</a>
+                <a href="#">Feedback</a>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2025 FlavorVerse. All rights reserved.</div>
+    </footer>
+
+    <script>
+        // Star rating functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const ratingInputs = document.querySelectorAll('.rating-input input[type="radio"]');
+            const ratingLabels = document.querySelectorAll('.rating-input label');
+
+            ratingLabels.forEach((label, index) => {
+                label.addEventListener('mouseenter', function() {
+                    // Remove hover class from all labels
+                    ratingLabels.forEach(l => l.classList.remove('hover'));
+                    // Add hover class to current and previous labels
+                    for (let i = 0; i <= index; i++) {
+                        ratingLabels[i].classList.add('hover');
+                    }
+                });
+
+                label.addEventListener('mouseleave', function() {
+                    // Remove hover class from all labels
+                    ratingLabels.forEach(l => l.classList.remove('hover'));
+                });
+
+                label.addEventListener('click', function() {
+                    // Remove active class from all labels
+                    ratingLabels.forEach(l => l.classList.remove('active'));
+                    // Add active class to current and previous labels
+                    for (let i = 0; i <= index; i++) {
+                        ratingLabels[i].classList.add('active');
+                    }
+                });
+            });
+
+            // Set initial active state based on checked radio button
+            ratingInputs.forEach((input, index) => {
+                if (input.checked) {
+                    for (let i = 0; i <= index; i++) {
+                        ratingLabels[i].classList.add('active');
+                    }
+                }
+            });
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/social.js') }}"></script>
+
+</body>
+</html>

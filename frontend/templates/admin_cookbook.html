@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlavorVerse Admin - Cookbooks Management</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css">
+
+<style>
+/* RESET */
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; }
+body { background:#f6f7fb; }
+
+/* LAYOUT */
+.admin-container { display:flex; }
+
+/* SIDEBAR */
+.sidebar {
+    width:240px;
+    background:#fff;
+    min-height:100vh;
+    border-right:1px solid #e5e5e5;
+    padding:22px;
+}
+.sidebar-title { font-size:18px; font-weight:600; margin-bottom:24px; }
+.sidebar-menu { list-style:none; }
+.sidebar-item {
+    display:flex; align-items:center; gap:12px;
+    padding:12px; margin-bottom:4px; border-radius:8px;
+    cursor:pointer; font-size:15px; color:#333; transition:0.2s;
+}
+.sidebar-item i { font-size:18px; }
+.sidebar-item:hover { background:#f1f1f1; }
+.sidebar-item.active { background:#eef5ff; color:#2d6cdf; }
+
+/* MAIN */
+.main { flex-grow:1; padding:24px 40px; }
+
+/* TOPBAR */
+.topbar {
+    display:flex; justify-content:space-between; align-items:center;
+}
+.search-box {
+    width:320px; padding:10px 14px; border:1px solid #ccc; border-radius:8px;
+}
+.topbar-right { display:flex; align-items:center; gap:16px; }
+.topbar-right i { font-size:20px; cursor:pointer; }
+.avatar { width:38px; height:38px; border-radius:50%; }
+
+/* TITLE */
+.page-title { font-size:22px; font-weight:700; margin-top:32px; }
+
+/* CONTENT SECTION */
+.box {
+    background:#fff;
+    border:1px solid #e4e4e4;
+    border-radius:12px;
+    padding:20px;
+    margin-top:20px;
+}
+
+/* SEARCH + FILTER + BUTTON ROW */
+.row-flex {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:16px;
+}
+
+.left-controls {
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.search-small {
+    padding:8px 12px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    width:220px;
+}
+
+.select-small {
+    padding:8px 12px;
+    border:1px solid #ccc;
+    border-radius:6px;
+}
+
+.orange-btn {
+    background:#ff7b00;
+    color:#fff;
+    padding:10px 16px;
+    font-size:14px;
+    font-weight:600;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+/* TABLE */
+table { width:100%; border-collapse:collapse; margin-top:10px; }
+th, td { padding:14px; border-bottom:1px solid #f1f1f1; font-size:14px; text-align:left; }
+th { background:#fafafa; font-weight:600; }
+
+/* BADGES */
+.badge {
+    padding:4px 10px;
+    border-radius:12px;
+    font-size:12px;
+    font-weight:600;
+}
+.badge-public { background:#ffefd9; color:#d67a00; }
+.badge-private { background:#e3e3e3; color:#777; }
+.badge-draft { background:#ddecff; color:#2664d8; }
+
+.more-btn { border:none; background:none; font-size:20px; cursor:pointer; }
+
+/* PAGINATION */
+.pagination { display:flex; gap:8px; margin-top:20px; }
+.pagination button {
+    padding:8px 16px;
+    background:#fff;
+    border:1px solid #ccc;
+    border-radius:6px;
+    cursor:pointer;
+}
+.pagination .active {
+    background:#2d6cdf; color:white; border-color:#2d6cdf;
+}
+
+/* FOOTER */
+footer {
+    text-align:center; color:#888; font-size:14px;
+    margin-top:28px; padding-bottom:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="admin-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h2 class="sidebar-title">Cookbooks Management</h2>
+
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><i class="ri-dashboard-line"></i>Dashboard</li>
+            <li class="sidebar-item"><i class="ri-user-line"></i>Users</li>
+            <li class="sidebar-item"><i class="ri-restaurant-line"></i>Recipes</li>
+            <li class="sidebar-item"><i class="ri-chat-3-line"></i>Comments</li>
+            <li class="sidebar-item"><i class="ri-bar-chart-line"></i>Reports</li>
+            <li class="sidebar-item active"><i class="ri-book-open-line"></i>Cookbooks</li>
+            <li class="sidebar-item"><i class="ri-price-tag-3-line"></i>Categories & Tags</li>
+            <li class="sidebar-item"><i class="ri-time-line"></i>Activity Logs</li>
+            <li class="sidebar-item"><i class="ri-notification-3-line"></i>Notifications</li>
+            <li class="sidebar-item"><i class="ri-settings-3-line"></i>System Settings</li>
+        </ul>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <main class="main">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <input type="text" placeholder="Search..." class="search-box">
+            <div class="topbar-right">
+                <i class="ri-notification-3-line"></i>
+                <i class="ri-settings-3-line"></i>
+                <img src="https://randomuser.me/api/portraits/men/20.jpg" class="avatar">
+            </div>
+        </div>
+
+        <h2 class="page-title">Cookbooks Management</h2>
+
+        <!-- CONTENT BOX -->
+        <div class="box">
+
+            <div class="row-flex">
+                <div class="left-controls">
+                    <input type="text" class="search-small" placeholder="Search by title...">
+                    <select class="select-small">
+                        <option>Filter Visibility</option>
+                    </select>
+                </div>
+
+                <button class="orange-btn">+ Create New Cookbook</button>
+            </div>
+
+            <!-- TABLE -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Recipes</th>
+                        <th>Visibility</th>
+                        <th>Created Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td><img src="https://i.imgur.com/4ZQZ4ak.png" style="width:32px; margin-right:8px; vertical-align:middle;"> Healthy Everyday Meals</td>
+                        <td>Alice Johnson</td>
+                        <td>15</td>
+                        <td><span class="badge badge-public">Public</span></td>
+                        <td>2023-10-26</td>
+                        <td><button class="more-btn">⋮</button></td>
+                    </tr>
+
+                    <tr>
+                        <td><img src="https://i.imgur.com/sr5xk1v.png" style="width:32px; margin-right:8px; vertical-align:middle;"> Desserts for Special Occasions</td>
+                        <td>Bob Williams</td>
+                        <td>8</td>
+                        <td><span class="badge badge-private">Private</span></td>
+                        <td>2023-11-15</td>
+                        <td><button class="more-btn">⋮</button></td>
+                    </tr>
+
+                    <tr>
+                        <td><img src="https://i.imgur.com/84V7Ij3.png" style="width:32px; margin-right:8px; vertical-align:middle;"> Italian Comfort Food</td>
+                        <td>Carol Davis</td>
+                        <td>20</td>
+                        <td><span class="badge badge-public">Public</span></td>
+                        <td>2023-09-01</td>
+                        <td><button class="more-btn">⋮</button></td>
+                    </tr>
+
+                    <tr>
+                        <td><img src="https://i.imgur.com/1O7yT6K.png" style="width:32px; margin-right:8px; vertical-align:middle;"> Baking Essentials</td>
+                        <td>David Green</td>
+                        <td>10</td>
+                        <td><span class="badge badge-draft">Draft</span></td>
+                        <td>2024-01-20</td>
+                        <td><button class="more-btn">⋮</button></td>
+                    </tr>
+
+                    <tr>
+                        <td><img src="https://i.imgur.com/oR9hQ30.png" style="width:32px; margin-right:8px; vertical-align:middle;"> Mexican Street Food</td>
+                        <td>Alice Johnson</td>
+                        <td>12</td>
+                        <td><span class="badge badge-public">Public</span></td>
+                        <td>2023-12-05</td>
+                        <td><button class="more-btn">⋮</button></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- PAGINATION -->
+            <div class="pagination">
+                <button>Previous</button>
+                <button class="active">1</button>
+                <button>2</button>
+                <button>3</button>
+                <button>Next</button>
+            </div>
+
+            <p style="font-size:13px; color:#777;">Showing 1-5 of 5 cookbooks</p>
+
+        </div>
+
+        <footer>© 2025 FlavorVerse Admin. All rights reserved.</footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlavorVerse Admin - Notifications Center</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+/* RESET */
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+body{background:#f6f7fb;}
+
+/* LAYOUT */
+.admin-container{display:flex;}
+
+/* SIDEBAR */
+.sidebar{
+    width:240px;min-height:100vh;background:white;
+    border-right:1px solid #e5e5e5;padding:22px;
+}
+.sidebar-menu{list-style:none;margin-top:10px;}
+.sidebar-item{
+    display:flex;align-items:center;gap:12px;padding:12px;
+    border-radius:8px;font-size:15px;color:#333;
+    cursor:pointer;margin-bottom:4px;transition:0.2s;
+}
+.sidebar-item i{font-size:18px;}
+.sidebar-item:hover{background:#f1f1f1;}
+.sidebar-item.active{background:#eef5ff;color:#2d6cdf;font-weight:600;}
+
+.sidebar-title{
+    font-size:18px;font-weight:600;margin-bottom:20px;
+}
+
+/* MAIN AREA */
+.main{flex-grow:1;padding:24px 40px;}
+
+/* TOPBAR */
+.topbar{
+    display:flex;justify-content:space-between;
+    align-items:center;margin-bottom:20px;
+}
+.search-box{
+    width:320px;padding:10px 14px;border:1px solid #ccc;
+    border-radius:8px;background:white;
+}
+.topbar-right{display:flex;align-items:center;gap:18px;}
+.topbar-right i{font-size:22px;cursor:pointer;}
+.avatar{
+    width:38px;height:38px;border-radius:50%;
+}
+
+/* TITLES */
+.page-title{font-size:22px;font-weight:700;margin-bottom:4px;}
+.page-sub{font-size:14px;color:#666;margin-bottom:20px;}
+
+/* CONTENT GRID */
+.notifications-wrapper{
+    display:grid;
+    grid-template-columns:1.4fr 1fr;
+    gap:25px;
+}
+
+/* LEFT PANEL – LIST */
+.left-panel{
+    background:white;border:1px solid #e3e3e3;
+    border-radius:12px;padding:20px;
+}
+
+.left-panel-header{
+    display:flex;align-items:center;
+    gap:12px;margin-bottom:14px;
+}
+.left-panel-header input{
+    flex:1;padding:8px 12px;border:1px solid #ccc;
+    border-radius:6px;font-size:14px;
+}
+.left-panel-header select{
+    padding:8px 10px;border:1px solid #ccc;
+    border-radius:6px;font-size:14px;
+}
+.broadcast-btn{
+    padding:8px 12px;background:#ff7b00;color:white;
+    border:none;border-radius:6px;font-size:14px;
+    cursor:pointer;font-weight:600;
+}
+
+/* NOTIFICATION ITEM */
+.notify-item{
+    display:flex;gap:14px;padding:14px;border-bottom:1px solid #eee;
+    cursor:pointer;transition:0.15s;
+}
+.notify-item:hover{background:#f8f8f8;}
+.notify-icon{
+    width:40px;height:40px;border-radius:8px;
+    background:#ffe8d9;color:#d46b00;
+    display:flex;align-items:center;justify-content:center;
+    font-size:20px;
+}
+.notify-content{flex-grow:1;}
+.notify-title{font-size:15px;font-weight:600;margin-bottom:3px;}
+.notify-desc{font-size:13px;color:#666;margin-bottom:4px;}
+.notify-time{font-size:12px;color:#999;}
+
+.badge{
+    font-size:11px;padding:3px 8px;border-radius:10px;
+    font-weight:600;margin-left:10px;
+}
+.badge-new{background:#ffefd9;color:#d47f00;}
+.badge-urgent{background:#ffe3e3;color:#d64545;}
+.badge-read{background:#e5f8ea;color:#2e8b57;}
+
+/* RIGHT PANEL – DETAILS */
+.detail-panel{
+    background:white;border:1px solid #e3e3e3;
+    border-radius:12px;padding:20px;
+}
+.detail-title{font-size:18px;font-weight:600;margin-bottom:4px;}
+.detail-time{font-size:13px;color:#777;margin-bottom:12px;}
+.detail-text{font-size:14px;color:#555;line-height:1.5;margin-bottom:20px;}
+
+.detail-meta{
+    font-size:14px;margin-bottom:8px;color:#333;
+}
+.detail-meta span{color:#777;margin-left:5px;}
+
+.detail-actions{
+    margin-top:16px;display:flex;gap:12px;
+}
+.btn{
+    padding:8px 14px;border-radius:6px;font-size:14px;
+    cursor:pointer;border:none;font-weight:600;
+}
+.btn-read{background:#e5f8ea;color:#2e8b57;}
+.btn-archive{background:#e8e8e8;color:#444;}
+.btn-delete{background:#ffe3e3;color:#d64545;}
+
+/* FOOTER */
+footer{
+    margin-top:25px;text-align:center;
+    font-size:13px;color:#888;padding-bottom:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="admin-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h2 class="sidebar-title">Notifications Center</h2>
+
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><i class="ri-dashboard-line"></i>Dashboard</li>
+            <li class="sidebar-item"><i class="ri-user-line"></i>Users</li>
+            <li class="sidebar-item"><i class="ri-restaurant-line"></i>Recipes</li>
+            <li class="sidebar-item"><i class="ri-chat-3-line"></i>Comments</li>
+            <li class="sidebar-item"><i class="ri-bar-chart-line"></i>Reports</li>
+            <li class="sidebar-item"><i class="ri-book-open-line"></i>Cookbooks</li>
+            <li class="sidebar-item"><i class="ri-price-tag-3-line"></i>Categories & Tags</li>
+            <li class="sidebar-item"><i class="ri-time-line"></i>Activity Logs</li>
+            <li class="sidebar-item active"><i class="ri-notification-3-line"></i>Notifications</li>
+            <li class="sidebar-item"><i class="ri-settings-3-line"></i>System Settings</li>
+        </ul>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <input type="text" placeholder="Search..." class="search-box">
+            <div class="topbar-right">
+                <i class="ri-notification-3-line"></i>
+                <i class="ri-settings-3-line"></i>
+                <img src="https://randomuser.me/api/portraits/men/35.jpg" class="avatar">
+            </div>
+        </div>
+
+        <h2 class="page-title">Notifications Center</h2>
+        <p class="page-sub">Manage system notifications and broadcast messages to users.</p>
+
+        <div class="notifications-wrapper">
+
+            <!-- LEFT LIST -->
+            <div class="left-panel">
+
+                <div class="left-panel-header">
+                    <input type="text" placeholder="Search notifications...">
+                    <select><option>All Statuses</option></select>
+                    <select><option>All Types</option></select>
+                    <button class="broadcast-btn">Create Broadcast</button>
+                </div>
+
+                <!-- Notification Item -->
+                <div class="notify-item">
+                    <div class="notify-icon"><i class="ri-notification-2-line"></i></div>
+                    <div class="notify-content">
+                        <div>
+                            <span class="notify-title">New Feature Rollout: Advanced Recipe Search</span>
+                            <span class="badge badge-new">New</span>
+                        </div>
+                        <div class="notify-desc">We’ve rolled out new advanced search capabilities...</div>
+                        <div class="notify-time">2 hours ago</div>
+                    </div>
+                </div>
+
+                <div class="notify-item">
+                    <div class="notify-icon" style="background:#ffeaea;color:#c73535;"><i class="ri-error-warning-line"></i></div>
+                    <div class="notify-content">
+                        <div>
+                            <span class="notify-title">Critical System Alert: Database Latency Spike</span>
+                            <span class="badge badge-urgent">Urgent</span>
+                        </div>
+                        <div class="notify-desc">Our monitoring systems detected an increase...</div>
+                        <div class="notify-time">5 hours ago</div>
+                    </div>
+                </div>
+
+                <div class="notify-item">
+                    <div class="notify-icon" style="background:#e6f9ee;color:#2e8b57;"><i class="ri-shield-check-line"></i></div>
+                    <div class="notify-content">
+                        <div>
+                            <span class="notify-title">User Report: Spam Content Detected</span>
+                            <span class="badge badge-read">Read</span>
+                        </div>
+                        <div class="notify-desc">A user reported multiple spam instances...</div>
+                        <div class="notify-time">1 day ago</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT DETAILS -->
+            <div class="detail-panel">
+                <h3 class="detail-title">New Feature Rollout: Advanced Recipe Search</h3>
+                <p class="detail-time">2 hours ago</p>
+
+                <p class="detail-text">
+                    We’ve rolled out new advanced search
+                    capabilities allowing users to filter recipes by multiple ingredients, 
+                    cooking time, and dietary restrictions. This enhancement aims to improve 
+                    user experience and recipe discovery on FlavorVerse.
+                </p>
+
+                <p class="detail-meta"><b>Sender:</b><span>System Admin</span></p>
+                <p class="detail-meta"><b>Category:</b><span>Product Update</span></p>
+
+                <div class="detail-actions">
+                    <button class="btn btn-read">Mark as Read</button>
+                    <button class="btn btn-archive">Archive</button>
+                    <button class="btn btn-delete">Delete</button>
+                </div>
+
+            </div>
+        </div>
+
+        <footer>© 2025 FlavorVerse Admin. All rights reserved.</footer>
+
+    </main>
+</div>
+
+</body>
+</html>

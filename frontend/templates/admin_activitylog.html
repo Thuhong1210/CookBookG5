@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlavorVerse Admin - Activity Logs</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css">
+
+<style>
+/* RESET */
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; }
+body { background:#f6f7fb; }
+
+/* ADMIN LAYOUT */
+.admin-container { display:flex; }
+
+/* SIDEBAR */
+.sidebar {
+    width:240px;
+    background:#fff;
+    min-height:100vh;
+    border-right:1px solid #e5e5e5;
+    padding:22px;
+}
+.sidebar-title { font-size:18px; font-weight:600; margin-bottom:24px; }
+.sidebar-menu { list-style:none; }
+.sidebar-item {
+    display:flex; align-items:center; gap:12px;
+    padding:12px; margin-bottom:4px; border-radius:8px;
+    cursor:pointer; color:#333; font-size:15px;
+    transition:0.25s;
+}
+.sidebar-item i { font-size:18px; }
+.sidebar-item:hover { background:#f1f1f1; }
+.sidebar-item.active { background:#eef5ff; color:#2d6cdf; }
+
+/* MAIN AREA */
+.main { flex-grow:1; padding:24px 40px; }
+
+/* TOPBAR */
+.topbar {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.search-box {
+    width:320px; padding:10px 14px;
+    border:1px solid #ccc; border-radius:8px;
+}
+.topbar-right { display:flex; align-items:center; gap:16px; }
+.topbar-right i { font-size:20px; cursor:pointer; }
+.avatar { width:38px; height:38px; border-radius:50%; }
+
+/* PAGE TITLE */
+.page-title { font-size:22px; font-weight:700; margin-top:32px; }
+.page-sub { font-size:14px; color:#666; margin-top:4px; }
+
+/* FILTER BOX */
+.filter-box {
+    background:#fff; border:1px solid #e4e4e4;
+    border-radius:12px; padding:20px;
+    margin-top:20px;
+}
+.filter-row {
+    display:flex; gap:12px; margin-bottom:12px;
+}
+.filter-row select, .filter-row input {
+    padding:8px 12px;
+    border:1px solid #ccc; border-radius:6px;
+    font-size:14px;
+}
+.export-btn {
+    background:#fff;
+    border:1px solid #ccc;
+    padding:8px 14px;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:14px;
+    display:flex; align-items:center; gap:6px;
+}
+
+/* CONTENT BOX */
+.content-box {
+    background:#fff;
+    border:1px solid #e4e4e4;
+    border-radius:12px;
+    padding:20px;
+    margin-top:20px;
+}
+
+/* TABLE */
+table { width:100%; border-collapse:collapse; }
+th, td {
+    padding:14px;
+    border-bottom:1px solid #f1f1f1;
+    font-size:14px;
+}
+th { background:#fafafa; font-weight:600; text-align:left; }
+
+.view-btn {
+    font-size:18px;
+    cursor:pointer;
+}
+
+/* FOOTER */
+footer {
+    text-align:center;
+    color:#888;
+    font-size:14px;
+    margin-top:28px;
+    padding-bottom:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="admin-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h2 class="sidebar-title">Activity Logs</h2>
+
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><i class="ri-dashboard-line"></i>Dashboard</li>
+            <li class="sidebar-item"><i class="ri-user-line"></i>Users</li>
+            <li class="sidebar-item"><i class="ri-restaurant-line"></i>Recipes</li>
+            <li class="sidebar-item"><i class="ri-chat-3-line"></i>Comments</li>
+            <li class="sidebar-item"><i class="ri-bar-chart-line"></i>Reports</li>
+            <li class="sidebar-item"><i class="ri-book-open-line"></i>Cookbooks</li>
+            <li class="sidebar-item"><i class="ri-price-tag-3-line"></i>Categories & Tags</li>
+            <li class="sidebar-item active"><i class="ri-time-line"></i>Activity Logs</li>
+            <li class="sidebar-item"><i class="ri-notification-3-line"></i>Notifications</li>
+            <li class="sidebar-item"><i class="ri-settings-3-line"></i>System Settings</li>
+        </ul>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <input type="text" placeholder="Search..." class="search-box">
+
+            <div class="topbar-right">
+                <i class="ri-notification-3-line"></i>
+                <i class="ri-settings-3-line"></i>
+                <img src="https://randomuser.me/api/portraits/men/19.jpg" class="avatar">
+            </div>
+        </div>
+
+        <h2 class="page-title">Activity Logs</h2>
+        <p class="page-sub">Comprehensive record of all significant platform activities, user actions, and system events.</p>
+
+        <!-- FILTER BOX -->
+        <div class="filter-box">
+            <div class="filter-row">
+                <select><option>All Actors</option></select>
+                <select><option>All Actions</option></select>
+                <select><option>All Targets</option></select>
+                <input type="text" placeholder="Search log details..." style="flex:1;">
+                <button class="export-btn"><i class="ri-download-line"></i> Export Data</button>
+            </div>
+        </div>
+
+        <!-- ACTIVITY TABLE -->
+        <div class="content-box">
+            <h3 style="font-size:18px; font-weight:600; margin-bottom:14px;">Recent Activity</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Actor</th>
+                        <th>Action</th>
+                        <th>Target</th>
+                        <th>IP Address</th>
+                        <th>Details</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>2023-10-27 10:30:15</td>
+                        <td>Admin (Moderator)</td>
+                        <td>Recipe Approved</td>
+                        <td>Spicy Tofu Stir-fry</td>
+                        <td>192.168.31.0</td>
+                        <td>Recipe “Spicy Tofu Stir-fry” approved for publication.</td>
+                        <td><i class="ri-eye-line view-btn"></i></td>
+                    </tr>
+
+                    <tr>
+                        <td>2023-10-27 09:45:00</td>
+                        <td>User Alice (alice@example.com)</td>
+                        <td>Comment Added</td>
+                        <td>Delicious Chocolate Cake</td>
+                        <td>203.0.113.5</td>
+                        <td>New comment added to recipe.</td>
+                        <td><i class="ri-eye-line view-btn"></i></td>
+                    </tr>
+
+                    <tr>
+                        <td>2023-10-27 08:00:20</td>
+                        <td>System</td>
+                        <td>User Account Suspended</td>
+                        <td>User Bob (bob@example.com)</td>
+                        <td>172.16.0.1</td>
+                        <td>Account suspended due to violations.</td>
+                        <td><i class="ri-eye-line view-btn"></i></td>
+                    </tr>
+
+                    <tr>
+                        <td>2023-10-26 21:15:40</td>
+                        <td>User Emma</td>
+                        <td>Password Reset</td>
+                        <td>—</td>
+                        <td>192.168.10.55</td>
+                        <td>User requested password reset.</td>
+                        <td><i class="ri-eye-line view-btn"></i></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        <footer>© 2025 FlavorVerse Admin. All rights reserved.</footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>

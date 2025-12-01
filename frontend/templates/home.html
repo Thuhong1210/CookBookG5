@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlavorVerse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* RESET */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #fff;
+            color: #222;
+        }
+
+        /* HEADER */
+        header {
+            width: 100%;
+            padding: 16px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            position: fixed;
+            top: 0;
+            z-index: 20;
+            border-bottom: 1px solid #e9ecef;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff7b00;
+            letter-spacing: -0.5px;
+        }
+
+        .left-nav a {
+            text-decoration: none;
+            color: #333;
+            font-size: 15px;
+            font-weight: 500;
+            transition: 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .left-nav a:hover {
+            color: #ff7b00;
+        }
+
+        .right-nav {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            width: 260px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 6px 12px;
+            background: #fff;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .search-box button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #ff7b00;
+            font-size: 16px;
+            margin-left: 8px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .btn-create-recipe {
+            padding: 8px 18px;
+            background: #ff7b00;
+            color: white;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .btn-create-recipe:hover {
+            background: #e66e00;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            margin-top: 90px;
+            width: 100%;
+            height: 420px;
+            background-image: url('https://i.pinimg.com/1200x/f3/c4/ab/f3c4abded1846802415d038551270f8c.jpg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.30);
+        }
+
+        .hero-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            max-width: 700px;
+        }
+
+        .hero-content h1 {
+            font-size: 44px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        .hero-content p {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 26px;
+        }
+
+        .hero-search {
+            display: flex;
+            background: #fff;
+            border-radius: 30px;
+            padding: 8px;
+            gap: 8px;
+            max-width: 450px;
+            margin: auto;
+        }
+
+        .hero-search input {
+            width: 100%;
+            border: none;
+            outline: none;
+            padding: 6px 12px;
+        }
+
+        .hero-search button {
+            padding: 10px 22px;
+            border: none;
+            background: #ff7b00;
+            color: white;
+            border-radius: 22px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .hero-search form {
+            display: flex;
+            background: #fff;
+            border-radius: 30px;
+            padding: 8px;
+            gap: 8px;
+            max-width: 450px;
+            margin: auto;
+        }
+
+        .hero-search input {
+            width: 100%;
+            border: none;
+            outline: none;
+            padding: 6px 12px;
+        }
+
+        .hero-search button {
+            padding: 10px 22px;
+            border: none;
+            background: #ff7b00;
+            color: white;
+            border-radius: 22px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* TAG SECTION */
+        .tags-section {
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .tag-list {
+            margin-top: 16px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .tag {
+            padding: 8px 18px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .tag:hover {
+            background: #ff7b00;
+            color: white;
+            border-color: #ff7b00;
+        }
+
+        /* FEATURED RECIPES */
+        .featured {
+            width: 100%;
+            margin-top: 70px;
+            padding: 0 70px 80px;
+        }
+
+        .featured h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .recipe-card {
+            border: 1px solid #eee;
+            border-radius: 16px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+            transition: 0.2s ease;
+            cursor: pointer;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        }
+
+        .recipe-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .recipe-content {
+            padding: 18px;
+        }
+
+        .recipe-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 14px;
+        }
+
+        .recipe-info-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #444;
+            font-size: 14px;
+        }
+
+        .icon {
+            width: 16px;
+            opacity: 0.8;
+        }
+
+        .rating-row {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 14px;
+        }
+
+        .star {
+            width: 16px;
+        }
+
+        .rating-number {
+            margin-left: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .author-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .author-avatar {
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #eee;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .author-name {
+            font-size: 14px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .icon {
+            width: 16px !important;
+            height: 16px !important;
+            object-fit: contain;
+        }
+
+        .star {
+            width: 16px !important;
+            height: 16px !important;
+            object-fit: contain;
+        }
+
+        /* RECENTLY ADDED */
+        .recently {
+            width: 100%;
+            margin-top: 70px;
+            padding: 0 70px 60px;
+        }
+
+        .recently h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: #f7f7f7;
+            padding: 60px 60px 20px;
+            margin-top: 50px;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .footer-col a {
+            display: block;
+            color: #555;
+            margin-bottom: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.2s ease;
+        }
+
+        .footer-col a:hover {
+            color: #ff7b00;
+        }
+
+        .footer-desc {
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .footer-bottom {
+            margin-top: 40px;
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .footer-logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ff7b00;
+            margin-bottom: 10px;
+        }
+
+        .login-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        .login-btn {
+            padding: 8px 16px;
+            color: #ff7b00;
+            border: 1.5px solid #ff7b00;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .register-btn {
+            padding: 8px 16px;
+            background: #ff7b00;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .logout-btn {
+            padding: 6px 12px;
+            background: #ff4444;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        /* Notifications */
+        .notification-wrapper {
+            position: relative;
+        }
+
+        .notification-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            color: #ff7b00;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -4px;
+            background: #ff4444;
+            color: #fff;
+            font-size: 11px;
+            border-radius: 999px;
+            padding: 2px 6px;
+        }
+
+        .notification-panel {
+            position: absolute;
+            right: 0;
+            top: 52px;
+            width: 320px;
+            max-height: 430px;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            padding: 14px;
+            display: none;
+            flex-direction: column;
+            z-index: 30;
+        }
+
+        .notification-panel.visible {
+            display: flex;
+        }
+
+        .notification-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .notification-panel-header h5 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .mark-read-btn {
+            border: none;
+            background: none;
+            font-size: 13px;
+            color: #ff7b00;
+            cursor: pointer;
+        }
+
+        .notification-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            overflow-y: auto;
+            max-height: 360px;
+        }
+
+        .notification-item {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #f1f1f1;
+            margin-bottom: 10px;
+            background: #fff;
+            transition: background 0.2s ease;
+        }
+
+        .notification-item.unread {
+            background: #fff9f3;
+            border-color: #ffe1c7;
+        }
+
+        .notification-message {
+            font-size: 14px;
+            color: #2d3748;
+            margin-bottom: 6px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .notification-message strong {
+            color: #ff7b00;
+        }
+
+        .notification-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .notification-meta a {
+            color: #ff7b00;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .notification-meta .notification-recipe {
+            color: #ff7b00;
+            font-weight: 500;
+        }
+
+        .notification-empty {
+            font-size: 14px;
+            color: #718096;
+            text-align: center;
+            padding: 30px 10px;
+        }
+
+        /* Follow button */
+        .follow-btn {
+            margin-top: 12px;
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid #ff7b00;
+            background: white;
+            color: #ff7b00;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .follow-btn.is-following {
+            background: #ff7b00;
+            color: white;
+        }
+
+        .follow-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="left-nav">
+        <div class="nav-logo">
+            <a href="{{ url_for('index') }}" style="text-decoration: none;"><span class="logo-text">FlavorVerse</span></a>
+        </div>
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('allrecipes') }}">All Recipes</a>
+        <a href="{{ url_for('create_recipe_page') }}" class="btn-create-recipe">Create Recipe</a>
+        <a href="{{ url_for('userprofile') }}">My Profile</a>
+    </div>
+
+    <div class="right-nav">
+        <form class="search-box" action="{{ url_for('search') }}" method="GET">
+            <input type="text" name="q" placeholder="Search recipes..." required>
+            <button type="submit"><i class="fas fa-search"></i></button>
+        </form>
+
+        {% if current_user.is_authenticated %}
+        <div class="notification-wrapper" id="notification-wrapper">
+            <button class="notification-button" id="notification-button">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge" id="notification-badge" hidden>0</span>
+            </button>
+            <div class="notification-panel" id="notification-panel">
+                <div class="notification-panel-header">
+                    <h5>Thông báo</h5>
+                    <button class="mark-read-btn" id="mark-all-read">Đánh dấu đã đọc</button>
+                </div>
+                <div class="notification-empty" id="notification-empty">
+                    Chưa có thông báo nào.
+                </div>
+                <ul class="notification-list" id="notification-list"></ul>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- User Menu - Show when logged in -->
+        {% if current_user.is_authenticated %}
+        <div class="user-menu">
+            <div class="user-avatar">
+                {% if current_user.profile_picture %}
+                    <img src="{{ current_user.profile_picture }}" alt="Profile Picture">
+                {% else %}
+                    <img src="https://randomuser.me/api/portraits/men/12.jpg" alt="User">
+                {% endif %}
+            </div>
+            <span class="user-name">{{ current_user.username }}</span>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        </div>
+        {% else %}
+        <!-- Login Buttons - Show when not logged in -->
+        <div class="login-buttons">
+            <a href="{{ url_for('login') }}" class="login-btn">Đăng nhập</a>
+            <a href="{{ url_for('register') }}" class="register-btn">Đăng ký</a>
+        </div>
+        {% endif %}
+    </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+        <h1>Savor the Flavor, Share the Love</h1>
+        <p>Discover thousands of delicious recipes, connect with home cooks, and share your culinary creations.</p>
+
+        <form class="hero-search" action="{{ url_for('search') }}" method="GET">
+            <input type="text" name="q" placeholder="Search for recipes, ingredients, cuisines..." required>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+</section>
+
+<!-- TAG SECTION -->
+<section class="tags-section">
+    <h3>Trending Tags</h3>
+
+    <div class="tag-list">
+        <div class="tag">Vietnamese</div>
+        <div class="tag">Vegan</div>
+        <div class="tag">Desserts</div>
+        <div class="tag">Quick & Easy</div>
+        <div class="tag">Breakfast</div>
+        <div class="tag">Healthy</div>
+        <div class="tag">Spicy</div>
+        <div class="tag">Gluten-Free</div>
+    </div>
+</section>
+
+<!-- FEATURED RECIPES -->
+<section class="featured">
+    <h2>Featured Recipes</h2>
+
+    <div class="recipe-grid">
+        {% for item in recipes %}
+        <div class="recipe-card" onclick="window.location.href='{{ url_for('recipe_details', recipe_id=item.recipe.id) }}'">
+            <img src="{{ item.recipe.image_url or 'https://i.pinimg.com/736x/f7/c4/72/f7c472ad678887044fc886a2b332f737.jpg' }}" alt="{{ item.recipe.title }}">
+            <div class="recipe-content">
+                <h3 class="recipe-title">{{ item.recipe.title }}</h3>
+                <div class="recipe-info-row">
+                    <div class="info-item">
+                        <img src="{{ url_for('static', filename='img/fork-knife.svg') }}" class="icon" alt="Category">
+                        <span>{{ item.recipe.category }}</span>
+                    </div>
+                    <div class="info-item">
+                        <img src="{{ url_for('static', filename='img/clock.svg') }}" class="icon" alt="Cooking time">
+                        <span>{{ item.recipe.cooking_time }} min</span>
+                    </div>
+                </div>
+                <div class="rating-row">
+                    {% for i in range(1, 6) %}
+                        {% if i <= item.avg_rating %}
+                            <img src="{{ url_for('static', filename='img/star-filled.svg') }}" class="star" alt="Star">
+                        {% elif i - 0.5 <= item.avg_rating %}
+                            <img src="{{ url_for('static', filename='img/star-half.svg') }}" class="star" alt="Half star">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='img/star-empty.svg') }}" class="star" alt="Empty star">
+                        {% endif %}
+                    {% endfor %}
+                    <span class="rating-number">{{ "%.1f"|format(item.avg_rating) if item.avg_rating > 0 else "No ratings" }}</span>
+                </div>
+                <div class="author-row">
+                    <img src="https://randomuser.me/api/portraits/men/{{ loop.index }}.jpg" class="author-avatar" alt="Author avatar">
+                    <span class="author-name">{{ item.user.username if item.user else 'Unknown' }}</span>
+                </div>
+                {% if current_user.is_authenticated and item.user and item.user.id != current_user.id %}
+                <button
+                    class="follow-btn {% if item.is_following %}is-following{% endif %}"
+                    type="button"
+                    data-follow-btn
+                    data-user-id="{{ item.user.id }}"
+                    data-following="{{ 'true' if item.is_following else 'false' }}"
+                >
+                    {{ 'Đang theo dõi' if item.is_following else 'Theo dõi' }}
+                </button>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- View All Recipes Button -->
+    <div style="text-align: center; margin-top: 40px;">
+        <a href="{{ url_for('allrecipes') }}" class="btn-create-recipe" style="padding: 12px 30px; font-size: 16px;">View All Recipes</a>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-col">
+            <span class="footer-logo-text">FlavorVerse</span>
+            <p class="footer-desc">
+                Discover, share, and savor the art of cooking with CookVerse.
+            </p>
+        </div>
+        <div class="footer-col">
+            <h4>Quick Links</h4>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('allrecipes') }}">Recipes</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+        </div>
+        <div class="footer-col">
+            <h4>Categories</h4>
+            <a href="#">Appetizers</a>
+            <a href="#">Main Courses</a>
+            <a href="#">Desserts</a>
+            <a href="#">Beverages</a>
+        </div>
+        <div class="footer-col">
+            <h4>Support</h4>
+            <a href="#">FAQ</a>
+            <a href="#">Help Center</a>
+            <a href="#">Feedback</a>
+        </div>
+    </div>
+    <div class="footer-bottom">© 2025 CookVerse. All rights reserved.</div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/social.js') }}"></script>
+</body>
+</html>

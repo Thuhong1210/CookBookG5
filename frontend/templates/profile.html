@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - FlavorVerse</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        /* Profile Container */
+        .profile-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .profile-header {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            font-weight: bold;
+        }
+
+        .profile-name {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ee5a24;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Tabs Navigation */
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 10px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: #ee5a24;
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            background: #f8f9fa;
+        }
+
+        /* Recipes Grid */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .recipe-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .recipe-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .recipe-info {
+            padding: 1.5rem;
+        }
+
+        .recipe-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .recipe-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .recipe-country {
+            background: #e9ecef;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .recipe-difficulty {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .difficulty-easy { color: #28a745; }
+        .difficulty-medium { color: #ffc107; }
+        .difficulty-hard { color: #dc3545; }
+
+        .recipe-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn-view {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #0056b3;
+        }
+
+        .btn-unsave {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-unsave:hover {
+            background: #c82333;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">FlavorVerse</div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('allrecipes') }}">All Recipes</a></li>
+                <li><a href="{{ url_for('create_recipe_page') }}">Create Recipe</a></li>
+                <li><a href="{{ url_for('userprofile') }}" style="opacity: 0.8;">My Profile</a></li>
+                <li><a href="#" onclick="logout()">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar" id="userAvatar">NV</div>
+            <h1 class="profile-name" id="userName">Nguyen Van</h1>
+            <p>Food enthusiast & Home cook</p>
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="createdCount">0</div>
+                    <div class="stat-label">Recipes Created</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="savedCount">0</div>
+                    <div class="stat-label">Recipes Saved</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('created')">My Recipes</div>
+            <div class="tab" onclick="switchTab('saved')">Saved Recipes</div>
+        </div>
+
+        <div id="createdRecipes" class="tab-content active">
+            <div class="recipes-grid" id="createdRecipesGrid">
+                <!-- Created recipes will be loaded here -->
+            </div>
+        </div>
+
+        <div id="savedRecipes" class="tab-content">
+            <div class="recipes-grid" id="savedRecipesGrid">
+                <!-- Saved recipes will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // URL variables
+        const createRecipeUrl = "{{ url_for('create_recipe_page') }}";
+        const allRecipesUrl = "{{ url_for('allrecipes') }}";
+
+        // Dữ liệu mẫu để test
+        const sampleRecipes = [
+            {
+                id: 1,
+                name: "Bún bò Huế",
+                country: "vietnamese",
+                difficulty: "medium",
+                description: "Món bún bò Huế nổi tiếng với hương vị đậm đà",
+                ingredients: ["Bún", "Thịt bò", "Giò heo", "Sả", "Ớt"],
+                steps: ["Bước 1: Chuẩn bị nguyên liệu", "Bước 2: Nấu nước dùng", "Bước 3: Trình bày"],
+                image: "bun-bo-hue.jpg",
+                tags: ["spicy", "soup", "vietnamese"]
+            },
+            {
+                id: 2,
+                name: "Phở Hà Nội",
+                country: "vietnamese", 
+                difficulty: "hard",
+                description: "Phở truyền thống Hà Nội",
+                ingredients: ["Bánh phở", "Thịt bò", "Hành tây", "Gừng", "Quế"],
+                steps: ["Bước 1: Nấu nước dùng", "Bước 2: Thái thịt", "Bước 3: Trình bày"],
+                image: "pho-ha-noi.jpg",
+                tags: ["noodles", "soup", "vietnamese"]
+            }
+        ];
+
+        // Load data từ localStorage
+        function loadUserData() {
+            // Lấy recipes đã tạo
+            let createdRecipes = JSON.parse(localStorage.getItem('userRecipes')) || [];
+            
+            // Lấy recipes đã lưu
+            let savedRecipes = JSON.parse(localStorage.getItem('savedRecipes')) || [];
+            
+            // Nếu chưa có data, dùng sample data
+            if (createdRecipes.length === 0 && savedRecipes.length === 0) {
+                createdRecipes = sampleRecipes;
+                localStorage.setItem('userRecipes', JSON.stringify(createdRecipes));
+            }
+
+            // Cập nhật hiển thị
+            updateProfileDisplay(createdRecipes, savedRecipes);
+        }
+
+        function updateProfileDisplay(createdRecipes, savedRecipes) {
+            // Update user info
+            document.getElementById('createdCount').textContent = createdRecipes.length;
+            document.getElementById('savedCount').textContent = savedRecipes.length;
+
+            // Display created recipes
+            displayRecipes('createdRecipesGrid', createdRecipes, 'created');
+            
+            // Display saved recipes
+            displayRecipes('savedRecipesGrid', savedRecipes, 'saved');
+        }
+
+        function displayRecipes(containerId, recipes, type) {
+            const container = document.getElementById(containerId);
+            
+            if (!recipes || recipes.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div>${type === 'created' ? '📝' : '❤️'}</div>
+                        <h3>No recipes found</h3>
+                        <p>${type === 'created' ? 'Create your first recipe to get started!' : 'Save some recipes to see them here!'}</p>
+                        ${type === 'created' ?
+                            '<a href="' + createRecipeUrl + '" style="display: inline-block; margin-top: 1rem; padding: 0.5rem 1rem; background: #ee5a24; color: white; text-decoration: none; border-radius: 5px;">Create Recipe</a>' :
+                            '<a href="' + allRecipesUrl + '" style="display: inline-block; margin-top: 1rem; padding: 0.5rem 1rem; background: #ee5a24; color: white; text-decoration: none; border-radius: 5px;">Browse Recipes</a>'
+                        }
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = recipes.map(recipe => `
+                <div class="recipe-card">
+                    <div class="recipe-image">
+                        ${recipe.name}
+                    </div>
+                    <div class="recipe-info">
+                        <h3 class="recipe-title">${recipe.name}</h3>
+                        <div class="recipe-meta">
+                            <span class="recipe-country">${getCountryName(recipe.country)}</span>
+                            <span class="recipe-difficulty ${getDifficultyClass(recipe.difficulty)}">
+                                ${getDifficultyText(recipe.difficulty)}
+                            </span>
+                        </div>
+                        <p style="color: #666; margin-bottom: 1rem; font-size: 0.9rem;">${recipe.description || 'Món ăn ngon truyền thống'}</p>
+                        <div class="recipe-actions">
+                            <button class="btn btn-view" onclick="viewRecipe(${recipe.id})">
+                                View Recipe
+                            </button>
+                            ${type === 'saved' ? `
+                                <button class="btn btn-unsave" onclick="unsaveRecipe(${recipe.id})">
+                                    Unsave
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getCountryName(countryCode) {
+            const countries = {
+                'vietnamese': 'Vietnamese',
+                'thai': 'Thai',
+                'japanese': 'Japanese',
+                'korean': 'Korean',
+                'chinese': 'Chinese'
+            };
+            return countries[countryCode] || 'Vietnamese';
+        }
+
+        function getDifficultyClass(difficulty) {
+            const classes = {
+                'easy': 'difficulty-easy',
+                'medium': 'difficulty-medium',
+                'hard': 'difficulty-hard'
+            };
+            return classes[difficulty?.toLowerCase()] || 'difficulty-medium';
+        }
+
+        function getDifficultyText(difficulty) {
+            const texts = {
+                'easy': 'Dễ',
+                'medium': 'Trung bình', 
+                'hard': 'Khó'
+            };
+            return texts[difficulty?.toLowerCase()] || 'Trung bình';
+        }
+
+        function switchTab(tabName) {
+            // Update tabs
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Recipes').classList.add('active');
+        }
+
+        function viewRecipe(recipeId) {
+            // Lưu recipeId để xem chi tiết
+            localStorage.setItem('currentRecipeId', recipeId);
+            // Redirect đến trang chi tiết recipe
+            window.location.href = `recipe-detail.html?id=${recipeId}`;
+        }
+
+        function unsaveRecipe(recipeId) {
+            let savedRecipes = JSON.parse(localStorage.getItem('savedRecipes')) || [];
+            savedRecipes = savedRecipes.filter(recipe => recipe.id !== recipeId);
+            localStorage.setItem('savedRecipes', JSON.stringify(savedRecipes));
+            
+            // Reload để cập nhật hiển thị
+            loadUserData();
+            alert('Đã bỏ lưu công thức!');
+        }
+
+        function logout() {
+            if (confirm('Bạn có chắc muốn đăng xuất?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Thêm hàm để lưu recipe (dùng cho các trang khác)
+        function saveRecipe(recipe) {
+            let savedRecipes = JSON.parse(localStorage.getItem('savedRecipes')) || [];
+            
+            // Check if recipe already saved
+            const alreadySaved = savedRecipes.some(saved => saved.id === recipe.id);
+            
+            if (!alreadySaved) {
+                savedRecipes.push(recipe);
+                localStorage.setItem('savedRecipes', JSON.stringify(savedRecipes));
+                alert('Đã lưu công thức vào profile!');
+                return true;
+            } else {
+                alert('Công thức đã được lưu trước đó!');
+                return false;
+            }
+        }
+
+        // Thêm hàm tạo recipe mới
+        function createNewRecipe(recipeData) {
+            let userRecipes = JSON.parse(localStorage.getItem('userRecipes')) || [];
+            
+            // Generate unique ID
+            const newId = Date.now();
+            const newRecipe = {
+                id: newId,
+                ...recipeData,
+                createdAt: new Date().toISOString()
+            };
+            
+            userRecipes.push(newRecipe);
+            localStorage.setItem('userRecipes', JSON.stringify(userRecipes));
+            
+            alert('Tạo công thức thành công!');
+            return newRecipe;
+        }
+
+        // Khởi tạo khi trang load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+        });
+    </script>
+</body>
+</html>

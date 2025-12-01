@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}{{ recipe.title }} - MyCookBook{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1>{{ recipe.title }}</h1>
+            {% if current_user.is_authenticated %}
+            <button class="favorite-btn" onclick="toggleFavorite({{ recipe.id }})">
+                <i class="fas fa-heart {% if is_favorite %}text-danger{% else %}text-muted{% endif %}"></i>
+            </button>
+            {% endif %}
+        </div>
+
+        <div class="mb-4">
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <span class="badge bg-primary"><i class="fas fa-clock"></i> {{ recipe.cooking_time }} phút</span>
+                <span class="badge bg-secondary"><i class="fas fa-chart-line"></i> {{ recipe.difficulty }}</span>
+                <span class="badge bg-info"><i class="fas fa-tag"></i> {{ recipe.category }}</span>
+                <span class="badge bg-success"><i class="fas fa-user"></i> {{ recipe.author.username }}</span>
+            </div>
+            <p class="lead">{{ recipe.description }}</p>
+        </div>
+
+        {% if recipe.image_url %}
+        <div class="mb-4">
+            <img src="{{ recipe.image_url }}" class="img-fluid rounded" alt="{{ recipe.title }}">
+        </div>
+        {% endif %}
+
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-shopping-basket"></i> Nguyên liệu</h5>
+            </div>
+            <div class="card-body">
+                <pre class="mb-0" style="white-space: pre-wrap; font-family: inherit;">{{ recipe.ingredients }}</pre>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-list-ol"></i> Hướng dẫn nấu</h5>
+            </div>
+            <div class="card-body">
+                <pre class="mb-0" style="white-space: pre-wrap; font-family: inherit;">{{ recipe.instructions }}</pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{{ url_for('home') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Quay lại danh sách món ăn
+    </a>
+</div>
+
+<script>
+function toggleFavorite(recipeId) {
+    fetch(`/favorite/${recipeId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const heartIcon = document.querySelector('.favorite-btn i');
+        if (data.status === 'added') {
+            heartIcon.classList.remove('text-muted');
+            heartIcon.classList.add('text-danger');
+        } else {
+            heartIcon.classList.remove('text-danger');
+            heartIcon.classList.add('text-muted');
+        }
+        alert(data.message);
+    });
+}
+</script>
+{% endblock %}

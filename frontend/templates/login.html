@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login • FlavorVerse</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS FIX */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .auth-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .auth-form {
+            flex: 1;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+        }
+
+        .logo-text {
+            color: #2e8b57;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        form input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 1.5rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        form input:focus {
+            outline: none;
+            border-color: #2e8b57;
+        }
+
+        .password-box {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .password-box input {
+            margin-bottom: 0;
+            padding-right: 50px;
+        }
+
+        .toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 1.2rem;
+            user-select: none;
+        }
+
+        .auth-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1.5rem 0;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .remember input[type="checkbox"] {
+            width: auto;
+            margin-bottom: 0;
+        }
+
+        .remember label {
+            margin-bottom: 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .forgot {
+            color: #2e8b57;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .forgot:hover {
+            text-decoration: underline;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background-color: #2e8b57;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #26734a;
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px);
+        }
+
+        .switch-auth {
+            text-align: center;
+            margin-top: 2rem;
+            color: #666;
+        }
+
+        .switch-auth a {
+            color: #2e8b57;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .switch-auth a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-side-green {
+            flex: 1;
+            background: linear-gradient(135deg, #2e8b57, #3cb371);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .auth-image-box {
+            max-width: 80%;
+            text-align: center;
+        }
+
+        .auth-image-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .auth-container {
+                flex-direction: column;
+            }
+
+            .auth-side-green {
+                display: none;
+            }
+
+            .auth-form {
+                padding: 40px 20px;
+            }
+
+            .auth-options {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+
+        /* Flash Messages */
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-danger {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+
+        .alert i {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="auth-container">
+
+    <!-- LEFT: FORM -->
+    <div class="auth-form">
+
+        <h1 class="logo-text">FlavorVerse</h1>
+
+        <h2>Welcome Back</h2>
+        <p class="subtitle">Log in to continue your culinary journey!</p>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for message in messages %}
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle"></i> {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('login') }}" method="POST">
+
+            <label>Username or Email</label>
+            <input type="text" placeholder="Enter username or email" name="identifier" required>
+
+            <label>Password</label>
+            <div class="password-box">
+                <input type="password" placeholder="Enter your password" name="password" required>
+                <span class="toggle">👁</span>
+            </div>
+
+            <div class="auth-options">
+                <div class="remember">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+                <a href="#" class="forgot">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn-primary">Login</button>
+
+            <p class="switch-auth">
+                Don't have an account? <a href="{{ url_for('register') }}">Create one</a>
+            </p>
+
+        </form>
+    </div>
+
+    <!-- RIGHT SIDE WITH GREEN BACKGROUND + CENTERED IMAGE -->
+    <div class="auth-side-green">
+        <div class="auth-image-box">
+            <img src="https://i.pinimg.com/736x/05/58/95/055895612081871ab69061544d82fe5f.jpg" alt="Culinary Inspiration">
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Thêm chức năng toggle password
+    document.querySelectorAll('.toggle').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            const passwordInput = this.previousElementSibling;
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                this.textContent = '🔒';
+            } else {
+                passwordInput.type = 'password';
+                this.textContent = '👁';
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

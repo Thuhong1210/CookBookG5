@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Recipe - FlavorVerse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* RESET */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+            color: #222;
+            line-height: 1.6;
+        }
+
+        /* HEADER */
+        header {
+            width: 100%;
+            padding: 16px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            position: fixed;
+            top: 0;
+            z-index: 20;
+            border-bottom: 1px solid #e9ecef;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff7b00;
+            letter-spacing: -0.5px;
+        }
+
+        .left-nav a {
+            text-decoration: none;
+            color: #333;
+            font-size: 15px;
+            font-weight: 500;
+            transition: 0.2s ease;
+        }
+
+        .left-nav a:hover {
+            color: #ff7b00;
+        }
+
+        .right-nav {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            width: 260px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 6px 12px;
+            background: #fff;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .btn-create-recipe {
+            padding: 8px 18px;
+            background: #ff7b00;
+            color: white;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-create-recipe:hover {
+            background: #e66e00;
+        }
+
+        /* EDIT RECIPE FORM */
+        .edit-recipe-section {
+            padding: 120px 60px 80px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #2d3748;
+        }
+
+        .section-header p {
+            font-size: 16px;
+            color: #718096;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .recipe-form {
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #f1f3f4;
+        }
+
+        .form-section:last-of-type {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::before {
+            content: "";
+            width: 4px;
+            height: 24px;
+            background: #ff7b00;
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            background: #fff;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #ff7b00;
+            box-shadow: 0 0 0 3px rgba(255, 123, 0, 0.15);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: #ff7b00;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #e66e00;
+        }
+
+        .btn-secondary {
+            background: #718096;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4a5568;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-outline:hover {
+            border-color: #ff7b00;
+            color: #ff7b00;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #f1f3f4;
+        }
+
+        .flash-message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .flash-error {
+            background: #fed7d7;
+            color: #c53030;
+            border: 1px solid #feb2b2;
+        }
+
+        .flash-success {
+            background: #c6f6d5;
+            color: #276749;
+            border: 1px solid #9ae6b4;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .edit-recipe-section {
+                padding: 120px 20px 40px;
+            }
+
+            .recipe-form {
+                padding: 20px;
+            }
+
+            .form-row,
+            .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .form-actions > div {
+                display: flex;
+                gap: 12px;
+            }
+
+            header {
+                padding: 16px 20px;
+            }
+
+            .left-nav {
+                gap: 16px;
+            }
+
+            .search-box {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="left-nav">
+            <div class="nav-logo">
+                <a href="{{ url_for('index') }}" style="text-decoration: none;"><span class="logo-text">FlavorVerse</span></a>
+            </div>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('allrecipes') }}">All Recipes</a>
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('create_recipe_page') }}" class="btn-create-recipe">Create Recipe</a>
+            {% endif %}
+        </div>
+        <div class="right-nav">
+            <form class="search-box" action="{{ url_for('search') }}" method="GET">
+                <input type="text" name="q" placeholder="Search recipes..." required>
+            </form>
+            {% if current_user.is_authenticated %}
+            <div class="user-menu">
+                <div class="user-avatar">
+                    <img src="https://randomuser.me/api/portraits/men/12.jpg" alt="User">
+                </div>
+                <span class="user-name">{{ current_user.username }}</span>
+                <a href="{{ url_for('logout') }}" style="color: #666; text-decoration: none; margin-left: 10px;">Logout</a>
+            </div>
+            {% else %}
+            <div style="display: flex; gap: 12px;">
+                <a href="{{ url_for('login') }}" style="color: #333; text-decoration: none;">Đăng nhập</a>
+                <a href="{{ url_for('register') }}" style="color: #ff7b00; text-decoration: none; font-weight: 600;">Đăng ký</a>
+            </div>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- EDIT RECIPE FORM -->
+    <section class="edit-recipe-section">
+        <div class="section-header">
+            <h1>Edit Your Recipe</h1>
+            <p>Update your recipe details below. Make it even more amazing!</p>
+        </div>
+
+        <form class="recipe-form" method="POST" action="{{ url_for('edit_recipe', recipe_id=recipe.id) }}" enctype="multipart/form-data">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="flash-message flash-error">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <!-- Basic Information Section -->
+            <div class="form-section">
+                <h2 class="section-title">Basic Information</h2>
+
+                <div class="form-group">
+                    <label for="title">Recipe Title *</label>
+                    <input type="text" id="title" name="title" value="{{ recipe.title }}"
+                           minlength="4" maxlength="25" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description *</label>
+                    <textarea id="description" name="description"
+                              minlength="20" maxlength="300" required>{{ recipe.description }}</textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="difficulty">Difficulty *</label>
+                        <select id="difficulty" name="difficulty" required>
+                            <option value="Easy" {% if recipe.difficulty == 'Easy' %}selected{% endif %}>Easy</option>
+                            <option value="Medium" {% if recipe.difficulty == 'Medium' %}selected{% endif %}>Medium</option>
+                            <option value="Hard" {% if recipe.difficulty == 'Hard' %}selected{% endif %}>Hard</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cooking_time">Cooking Time (minutes) *</label>
+                        <input type="number" id="cooking_time" name="cooking_time"
+                               value="{{ recipe.cooking_time }}" min="1" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="category">Category *</label>
+                        <select id="category" name="category" required>
+                            <option value="Vietnamese" {% if recipe.category == 'Vietnamese' %}selected{% endif %}>Vietnamese</option>
+                            <option value="English" {% if recipe.category == 'English' %}selected{% endif %}>English</option>
+                            <option value="Italian" {% if recipe.category == 'Italian' %}selected{% endif %}>Italian</option>
+                            <option value="Chinese" {% if recipe.category == 'Chinese' %}selected{% endif %}>Chinese</option>
+                            <option value="Japanese" {% if recipe.category == 'Japanese' %}selected{% endif %}>Japanese</option>
+                            <option value="Thai" {% if recipe.category == 'Thai' %}selected{% endif %}>Thai</option>
+                            <option value="French" {% if recipe.category == 'French' %}selected{% endif %}>French</option>
+                            <option value="Mexican" {% if recipe.category == 'Mexican' %}selected{% endif %}>Mexican</option>
+                            <option value="Indian" {% if recipe.category == 'Indian' %}selected{% endif %}>Indian</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recipe_type">Type *</label>
+                        <select id="recipe_type" name="recipe_type" required>
+                            <option value="food" {% if recipe.recipe_type == 'food' %}selected{% endif %}>Food</option>
+                            <option value="drink" {% if recipe.recipe_type == 'drink' %}selected{% endif %}>Drink</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ingredients Section -->
+            <div class="form-section">
+                <h2 class="section-title">Ingredients</h2>
+
+                <div class="form-group">
+                    <label for="ingredients">Ingredients (each on a new line) *</label>
+                    <textarea id="ingredients" name="ingredients" placeholder="Add each ingredient on a new line" required>{{ recipe.ingredients }}</textarea>
+                </div>
+            </div>
+
+            <!-- Instructions Section -->
+            <div class="form-section">
+                <h2 class="section-title">Instructions</h2>
+
+                <div class="form-group">
+                    <label for="instructions">Instructions (each step on a new line) *</label>
+                    <textarea id="instructions" name="instructions" placeholder="Add each step on a new line" required>{{ recipe.instructions }}</textarea>
+                </div>
+            </div>
+
+            <!-- Image Section -->
+            <div class="form-section">
+                <h2 class="section-title">Recipe Image</h2>
+
+                <div class="form-group">
+                    <label for="recipe_image_file">Upload Image File</label>
+                    <input type="file" id="recipe_image_file" name="recipe_image_file" accept="image/*" style="margin-bottom: 10px;">
+                    <small style="color: #718096; font-size: 12px; margin-top: 4px; display: block; margin-bottom: 10px;">
+                        Upload an image file (PNG, JPG, JPEG, GIF, WEBP) or enter URL below
+                    </small>
+                    <label for="image_url">Or Image URL (optional)</label>
+                    <input type="url" id="image_url" name="image_url"
+                           value="{{ recipe.image_url }}"
+                           placeholder="https://example.com/image.jpg">
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <div>
+                    <a href="{{ url_for('recipe_details', recipe_id=recipe.id) }}" class="btn btn-secondary">
+                        Cancel
+                    </a>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary">
+                        Update Recipe
+                    </button>
+                </div>
+            </div>
+        </form>
+    </section>
+
+    <script>
+        // Form validation
+        document.querySelector('.recipe-form').addEventListener('submit', function(e) {
+            const title = document.getElementById('title').value.trim();
+            const description = document.getElementById('description').value.trim();
+            const ingredients = document.getElementById('ingredients').value.trim();
+            const instructions = document.getElementById('instructions').value.trim();
+
+            if (title.length < 4 || title.length > 25) {
+                alert('Recipe title must be between 4-25 characters');
+                e.preventDefault();
+                return;
+            }
+
+            if (description.length < 20 || description.length > 300) {
+                alert('Description must be between 20-300 characters');
+                e.preventDefault();
+                return;
+            }
+
+            if (!ingredients) {
+                alert('Please add ingredients');
+                e.preventDefault();
+                return;
+            }
+
+            if (!instructions) {
+                alert('Please add instructions');
+                e.preventDefault();
+                return;
+            }
+        });
+    </script>
+</body>
+</html>

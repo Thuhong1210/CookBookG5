@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlavorVerse Admin - Categories & Tags</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css">
+
+<style>
+/* RESET */
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; }
+body { background:#f6f7fb; }
+
+/* LAYOUT */
+.admin-container { display:flex; }
+
+/* SIDEBAR (KEEP EXACTLY SAME) */
+.sidebar {
+    width:240px;
+    background:#fff;
+    min-height:100vh;
+    border-right:1px solid #e5e5e5;
+    padding:22px;
+}
+.sidebar-title { font-size:18px; font-weight:600; margin-bottom:24px; }
+.sidebar-menu { list-style:none; }
+.sidebar-item {
+    display:flex; align-items:center; gap:12px;
+    padding:12px; margin-bottom:4px; border-radius:8px;
+    cursor:pointer; font-size:15px; color:#333; transition:0.2s;
+}
+.sidebar-item i { font-size:18px; }
+.sidebar-item:hover { background:#f1f1f1; }
+.sidebar-item.active { background:#eef5ff; color:#2d6cdf; }
+
+/* MAIN */
+.main { flex-grow:1; padding:24px 40px; }
+
+/* TOPBAR */
+.topbar {
+    display:flex; justify-content:space-between; align-items:center;
+}
+.search-box {
+    width:320px; padding:10px 14px; border:1px solid #ccc; border-radius:8px;
+}
+.topbar-right { display:flex; align-items:center; gap:16px; }
+.topbar-right i { font-size:20px; cursor:pointer; }
+.avatar { width:38px; height:38px; border-radius:50%; }
+
+/* TITLE */
+.page-title { font-size:22px; font-weight:700; margin-top:32px; }
+.page-sub { font-size:14px; color:#666; margin-top:4px; }
+
+/* CATEGORY CARD */
+.admin-box {
+    background:#fff;
+    border:1px solid #e4e4e4;
+    border-radius:12px;
+    padding:20px;
+    margin-top:24px;
+}
+
+/* TABS */
+.tab-row { display:flex; gap:10px; margin-bottom:16px; }
+.tab-btn {
+    padding:8px 16px;
+    border:1px solid #ccc;
+    background:#fff;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:14px;
+}
+.tab-btn.active {
+    background:#eef5ff;
+    color:#2d6cdf;
+    border-color:#2d6cdf;
+}
+
+/* ACTION ROW */
+.action-row {
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:18px;
+}
+.orange-btn {
+    background:#ff7b00;
+    color:#fff;
+    padding:8px 16px;
+    font-size:14px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+.search-small {
+    width:230px;
+    padding:8px 12px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    font-size:14px;
+}
+
+/* TABLE */
+table { width:100%; border-collapse:collapse; }
+th, td { padding:14px; border-bottom:1px solid #f1f1f1; font-size:14px; }
+th { background:#fafafa; font-weight:600; text-align:left; }
+
+/* BADGES */
+.badge {
+    padding:4px 10px; font-size:12px;
+    border-radius:12px; font-weight:600;
+}
+.badge-active { background:#ffefd9; color:#d18400; }
+.badge-inactive { background:#e3e3e3; color:#777; }
+
+.drag-icon { font-size:20px; cursor:grab; opacity:0.6; }
+
+/* FOOTER */
+footer {
+    text-align:center; color:#888; font-size:14px;
+    margin-top:30px; padding-bottom:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="admin-container">
+
+    <!-- SIDEBAR (unchanged) -->
+    <aside class="sidebar">
+        <h2 class="sidebar-title">Categories & Tags</h2>
+
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><i class="ri-dashboard-line"></i>Dashboard</li>
+            <li class="sidebar-item"><i class="ri-user-line"></i>Users</li>
+            <li class="sidebar-item"><i class="ri-restaurant-line"></i>Recipes</li>
+            <li class="sidebar-item"><i class="ri-chat-3-line"></i>Comments</li>
+            <li class="sidebar-item"><i class="ri-bar-chart-line"></i>Reports</li>
+            <li class="sidebar-item"><i class="ri-book-open-line"></i>Cookbooks</li>
+            <li class="sidebar-item active"><i class="ri-price-tag-3-line"></i>Categories & Tags</li>
+            <li class="sidebar-item"><i class="ri-time-line"></i>Activity Logs</li>
+            <li class="sidebar-item"><i class="ri-notification-3-line"></i>Notifications</li>
+            <li class="sidebar-item"><i class="ri-settings-3-line"></i>System Settings</li>
+        </ul>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <input type="text" placeholder="Search..." class="search-box">
+            <div class="topbar-right">
+                <i class="ri-notification-3-line"></i>
+                <i class="ri-settings-3-line"></i>
+                <img src="https://randomuser.me/api/portraits/women/44.jpg" class="avatar">
+            </div>
+        </div>
+
+        <h2 class="page-title">Categories & Tags Management</h2>
+        <p class="page-sub">Manage recipe categories and tags across the platform.</p>
+
+
+        <!-- CONTENT BOX -->
+        <div class="admin-box">
+
+            <!-- TABS -->
+            <div class="tab-row">
+                <button class="tab-btn active">Categories</button>
+                <button class="tab-btn">Tags</button>
+            </div>
+
+            <!-- CREATE + SEARCH -->
+            <div class="action-row">
+                <button class="orange-btn">+ Create New Category</button>
+                <input type="text" placeholder="Search categories..." class="search-small">
+            </div>
+
+            <!-- TABLE -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Slug</th>
+                        <th>Recipes</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>Main Dishes</td>
+                        <td>main-dishes</td>
+                        <td>120</td>
+                        <td><span class="badge badge-active">Active</span></td>
+                        <td><i class="ri-drag-move-line drag-icon"></i></td>
+                    </tr>
+
+                    <tr>
+                        <td>Vegan</td>
+                        <td>vegan-main</td>
+                        <td>45</td>
+                        <td><span class="badge badge-active">Active</span></td>
+                        <td><i class="ri-drag-move-line drag-icon"></i></td>
+                    </tr>
+
+                    <tr>
+                        <td>Vegetarian</td>
+                        <td>vegetarian-main</td>
+                        <td>60</td>
+                        <td><span class="badge badge-active">Active</span></td>
+                        <td><i class="ri-drag-move-line drag-icon"></i></td>
+                    </tr>
+
+                    <tr>
+                        <td>Appetizers</td>
+                        <td>appetizers</td>
+                        <td>75</td>
+                        <td><span class="badge badge-active">Active</span></td>
+                        <td><i class="ri-drag-move-line drag-icon"></i></td>
+                    </tr>
+
+                    <tr>
+                        <td>Desserts</td>
+                        <td>desserts</td>
+                        <td>90</td>
+                        <td><span class="badge badge-active">Active</span></td>
+                        <td><i class="ri-drag-move-line drag-icon"></i></td>
+                    </tr>
+
+                    <tr>
+                        <td>Breakfast</td>
+                        <td>breakfast</td>
+                        <td>50</td>
+                        <td><span class="badge badge-inactive">Inactive</span></td>
+                        <td><i class="ri-drag-move-line drag-icon"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <footer>© 2025 FlavorVerse Admin. All rights reserved.</footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>

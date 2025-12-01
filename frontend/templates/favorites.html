@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Yêu thích - MyCookBook{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="fas fa-heart text-danger"></i> Công thức yêu thích</h1>
+
+{% if recipes %}
+<div class="row">
+    {% for recipe in recipes %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card recipe-card h-100">
+            {% if recipe.image_url %}
+            <img src="{{ recipe.image_url }}" class="card-img-top" alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
+            {% else %}
+            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                <i class="fas fa-utensils fa-3x text-muted"></i>
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ recipe.title }}</h5>
+                <p class="card-text text-muted">{{ recipe.description[:100] }}{% if recipe.description|length > 100 %}...{% endif %}</p>
+                <div class="mb-2">
+                    <span class="badge bg-primary">{{ recipe.cooking_time }} phút</span>
+                    <span class="badge bg-secondary">{{ recipe.difficulty }}</span>
+                </div>
+                <p class="card-text">
+                    <small class="text-muted">
+                        <i class="fas fa-user"></i> {{ recipe.author.username }}
+                    </small>
+                </p>
+            </div>
+            <div class="card-footer bg-transparent">
+                <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}" class="btn btn-outline-success btn-sm">
+                    <i class="fas fa-book-open"></i> Xem công thức
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info text-center">
+    <i class="fas fa-info-circle"></i> Bạn chưa có công thức yêu thích nào.
+    <br>
+    <a href="{{ url_for('home') }}" class="btn btn-success mt-3">Khám phá công thức</a>
+</div>
+{% endif %}
+{% endblock %}

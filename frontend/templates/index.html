@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold">Chào mừng đến với MyCookBook</h1>
+        <p class="lead">Khám phá và chia sẻ những công thức nấu ăn tuyệt vời</p>
+        {% if not current_user.is_authenticated %}
+        <div class="mt-4">
+            <a href="{{ url_for('register') }}" class="btn btn-light btn-lg me-3">Bắt đầu ngay</a>
+            <a href="{{ url_for('home') }}" class="btn btn-outline-light btn-lg">Xem món ăn</a>
+        </div>
+        {% else %}
+        <div class="mt-4">
+            <a href="{{ url_for('home') }}" class="btn btn-light btn-lg me-3">Xem món ăn</a>
+            <a href="{{ url_for('create_recipe') }}" class="btn btn-outline-light btn-lg">Tạo công thức</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card text-center border-0">
+                <div class="card-body">
+                    <i class="fas fa-book fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Công thức đa dạng</h5>
+                    <p class="card-text">Khám phá hàng ngàn công thức từ đơn giản đến phức tạp</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card text-center border-0">
+                <div class="card-body">
+                    <i class="fas fa-share-alt fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Chia sẻ dễ dàng</h5>
+                    <p class="card-text">Chia sẻ công thức của bạn với cộng đồng yêu nấu ăn</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card text-center border-0">
+                <div class="card-body">
+                    <i class="fas fa-heart fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Lưu yêu thích</h5>
+                    <p class="card-text">Lưu lại các công thức yêu thích để nấu sau</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
