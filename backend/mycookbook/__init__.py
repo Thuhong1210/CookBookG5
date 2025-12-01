@@ -334,6 +334,7 @@ def ensure_admin_schema():
             app.logger.warning('Không thể thêm cột is_admin: %s', exc)
 
     
+    
 def ensure_admin_account():
     admin_username = os.environ.get('DEFAULT_ADMIN_USERNAME', 'admin')
     admin_email = os.environ.get('DEFAULT_ADMIN_EMAIL', 'admin@example.com')
@@ -357,16 +358,25 @@ def ensure_admin_account():
         if not admin_user.is_admin:
             admin_user.is_admin = True
             updated = True
-        if not check_password_hash(admin_user.password_hash, admin_password):
-            if hashed_password is None:
-                hashed_password = generate_password_hash(admin_password)
-            admin_user.password_hash = hashed_password
-            updated = True
+        
+        # Try to verify password, but skip if it's a scrypt hash from MySQL
+        try:
+            if not check_password_hash(admin_user.password_hash, admin_password):
+                if hashed_password is None:
+                    hashed_password = generate_password_hash(admin_password)
+                admin_user.password_hash = hashed_password
+                updated = True
+        except (ValueError, Exception) as e:
+            # Skip password verification if it's an incompatible hash format (e.g., scrypt from MySQL)
+            app.logger.warning(f'Skipping password verification for admin: {str(e)}')
+            pass
+            
         if not admin_user.email:
             admin_user.email = admin_email
             updated = True
         if updated:
             db.session.commit()
+
 
     
 def ensure_notification_schema():
