@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+"""
+Standalone schema update script for MySQL database
+"""
 import pymysql
 import os
 from dotenv import load_dotenv
