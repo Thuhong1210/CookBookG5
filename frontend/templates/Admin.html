@@ -952,7 +952,7 @@
         <section class="panel">
             <div class="panel-header">
                 <h3>Database Connection</h3>
-                <button class="action-btn" type="button" id="checkConnBtn">Kiểm tra kết nối</button>
+                <button class="action-btn" type="button" id="checkConnBtn">Check Connection</button>
             </div>
             <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:12px;">
                 <div style="background:#fff; border:1px solid #edf2f7; border-radius:12px; padding:12px;">
@@ -1021,7 +1021,7 @@
                 <div>
                     <div class="metric-title">Total Users</div>
                     <div class="metric-value">{{ total_users }}</div>
-                    <div class="metric-meta">↑ tăng so với tháng trước</div>
+                    <div class="metric-meta">↑ increase from last month</div>
                 </div>
             </div>
             <div class="metric-card">
@@ -1029,7 +1029,7 @@
                 <div>
                     <div class="metric-title">Active Recipes</div>
                     <div class="metric-value">{{ approved_recipes_count }}</div>
-                    <div class="metric-meta">↑ duyệt gần đây</div>
+                    <div class="metric-meta">↑ recently approved</div>
                 </div>
             </div>
             <div class="metric-card">
@@ -1046,7 +1046,7 @@
                 <div>
                     <div class="metric-title">Reports Filed</div>
                     <div class="metric-value">{{ reports_count }}</div>
-                    <div class="metric-meta">không đổi</div>
+                    <div class="metric-meta">no change</div>
                 </div>
             </div>
         </section>
@@ -1079,7 +1079,7 @@
                             }}</small>
                     </div>
                     {% else %}
-                    <div class="activity-item">Chưa có hoạt động gần đây.</div>
+                    <div class="activity-item">No recent activity.</div>
                     {% endfor %}
                 </div>
             </div>
@@ -1095,7 +1095,7 @@
                         {% endif %}
                         <div class="recipe-card-body">
                             <h4>{{ r.title }}</h4>
-                            <small class="text-muted">By {{ r.user.username if r.user else 'Đã xoá' }}</small>
+                            <small class="text-muted">By {{ r.user.username if r.user else 'Deleted' }}</small>
                             {% if r.status == 'approved' %}
                             <span class="recipe-chip">Approved</span>
                             {% elif r.status == 'pending' %}
@@ -1106,7 +1106,7 @@
                         </div>
                     </div>
                     {% else %}
-                    <p>Không có công thức gần đây.</p>
+                    <p>No recent recipes.</p>
                     {% endfor %}
                 </div>
             </div>
@@ -1205,7 +1205,7 @@
         </section>
         {% endif %}
 
-        <!-- Phần Reports (FR-A8, FR-A9) -->
+        <!-- Reports Section (FR-A8, FR-A9) -->
         {% if active_view == 'reports' %}
         <section class="panel" id="reports-management">
             <div class="panel-header">
@@ -1375,7 +1375,7 @@
         </script>
         {% endif %}
 
-        <!-- Phần Categories & Tags (FR-A12, FR-A13, FR-A14, FR-A15) -->
+        <!-- Categories & Tags Section (FR-A12, FR-A13, FR-A14, FR-A15) -->
         {% if active_view == 'categories' %}
         <section class="panel" id="categories-management">
             <div class="panel-header">
@@ -1705,17 +1705,17 @@
         {% if active_view == 'users' %}
         <section class="panel" id="users-panel">
             <div class="panel-header">
-                <h3>Quản lý người dùng</h3>
-                <p>Cấp quyền admin hoặc xoá tài khoản</p>
+                <h3>User Management</h3>
+                <p>Grant Permission admin hoặc xoá tài khoản</p>
             </div>
             <div class="table-wrapper">
                 <table>
                     <thead>
                         <tr>
-                            <th>Tên</th>
+                            <th>Name</th>
                             <th>Email</th>
-                            <th>Vai trò</th>
-                            <th>Thao tác</th>
+                            <th>Role</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1734,22 +1734,22 @@
                                 {% if current_user.id != user.id %}
                                 <form action="{{ url_for('toggle_user_admin', user_id=user.id) }}" method="post"
                                     style="display:inline">
-                                    <button class="action-btn">{{ 'Thu hồi quyền' if user.is_admin else 'Cấp quyền
+                                    <button class="action-btn">{{ 'Revoke Permission' if user.is_admin else 'Grant Permission
                                         admin' }}</button>
                                 </form>
                                 <form action="{{ url_for('delete_user_admin', user_id=user.id) }}" method="post"
                                     style="display:inline"
-                                    onsubmit="return confirm('Xoá người dùng {{ user.username }}?');">
-                                    <button class="action-btn danger">Xoá</button>
+                                    onsubmit="return confirm('Delete người dùng {{ user.username }}?');">
+                                    <button class="action-btn danger">Delete</button>
                                 </form>
                                 {% else %}
-                                <small class="text-muted">Đang đăng nhập</small>
+                                <small class="text-muted">Currently logged in</small>
                                 {% endif %}
                             </td>
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="4">Chưa có người dùng.</td>
+                            <td colspan="4">No users yet.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -1763,7 +1763,7 @@
             <div class="panel-header">
                 <div>
                     <h3>Recipes Moderation</h3>
-                    <p>Quản lý các công thức do người dùng gửi</p>
+                    <p>Manage user-submitted recipes</p>
                 </div>
                 <form action="{{ url_for('admin_recipes') }}" method="get"
                     style="display:flex; gap:10px; align-items:center;">
@@ -1785,12 +1785,12 @@
                         <option value="">Category</option>
                         {% for label, count in category_counts %}
                         <option value="{{ label }}" {% if category_filter==label %}selected{% endif %}>{{ label or
-                            'Khác' }}</option>
+                            'Other' }}</option>
                         {% endfor %}
                     </select>
                     <input type="text" name="author" value="{{ author_filter }}" placeholder="Filter by author..."
                         style="padding:10px 12px; border:1px solid #e2e8f0; border-radius:8px; width:200px;">
-                    <button class="action-btn" type="submit">Lọc</button>
+                    <button class="action-btn" type="submit">Filter</button>
                 </form>
             </div>
             <div class="table-wrapper">
@@ -1829,8 +1829,8 @@
                                     {% endif %}
                                 </td>
                                 <td>{{ recipe.title }}</td>
-                                <td>{{ recipe.user.username if recipe.user else 'Đã xoá' }}</td>
-                                <td>{{ recipe.category or 'Khác' }}</td>
+                                <td>{{ recipe.user.username if recipe.user else 'Deleted' }}</td>
+                                <td>{{ recipe.category or 'Other' }}</td>
                                 <td>{{ recipe.difficulty }}</td>
                                 <td>{{ recipe.created_at.strftime('%Y-%m-%d') if recipe.created_at else '' }}</td>
                                 <td>
@@ -1847,14 +1847,14 @@
                                         class="action-btn">Xem</a>
                                     <form action="{{ url_for('delete_recipe_admin', recipe_id=recipe.id) }}"
                                         method="post" style="display:inline"
-                                        onsubmit="return confirm('Xoá công thức {{ recipe.title }}?');">
-                                        <button class="action-btn danger">Xoá</button>
+                                        onsubmit="return confirm('Delete công thức {{ recipe.title }}?');">
+                                        <button class="action-btn danger">Delete</button>
                                     </form>
                                 </td>
                             </tr>
                             {% else %}
                             <tr>
-                                <td colspan="9">Không có công thức phù hợp.</td>
+                                <td colspan="9">No matching recipes.</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -1867,15 +1867,15 @@
         {% if active_view == 'comments' %}
         <section class="panel" id="comments">
             <div class="panel-header">
-                <h3>Bình luận mới nhất</h3>
-                <p>Theo dõi thảo luận từ cộng đồng</p>
+                <h3>Latest Comments</h3>
+                <p>Monitor community discussions</p>
             </div>
             <div class="comment-list">
                 {% for comment in recent_comments %}
                 <div class="comment-item">
                     <div>
-                        <strong>{{ comment.user.username if comment.user else 'Ẩn danh' }}</strong>
-                        <span class="text-muted">trên</span>
+                        <strong>{{ comment.user.username if comment.user else 'Anonymous' }}</strong>
+                        <span class="text-muted">on</span>
                         <a href="{{ url_for('recipe_details', recipe_id=comment.recipe.id) }}" target="_blank">{{
                             comment.recipe.title }}</a>
                     </div>
@@ -1883,12 +1883,12 @@
                     <small class="rating-log-time">{{ comment.created_at.strftime('%d/%m/%Y %H:%M') if
                         comment.created_at else '' }}</small>
                     <form action="{{ url_for('delete_comment_admin', comment_id=comment.id) }}" method="post"
-                        onsubmit="return confirm('Xoá bình luận này?');">
-                        <button class="action-btn danger">Xoá</button>
+                        onsubmit="return confirm('Delete bình luận này?');">
+                        <button class="action-btn danger">Delete</button>
                     </form>
                 </div>
                 {% else %}
-                <p>Chưa có bình luận.</p>
+                <p>No comments yet.</p>
                 {% endfor %}
             </div>
         </section>
@@ -1898,18 +1898,18 @@
         {% if active_view == 'notifications' %}
         <section class="panel" id="notifications">
             <div class="panel-header">
-                <h3>Thông báo hệ thống</h3>
-                <p>Danh sách thông báo gần đây</p>
+                <h3>System Notifications</h3>
+                <p>Recent notifications list</p>
             </div>
             <div class="table-wrapper">
                 <table>
                     <thead>
                         <tr>
-                            <th>Người nhận</th>
-                            <th>Người thực hiện</th>
-                            <th>Loại</th>
-                            <th>Nội dung</th>
-                            <th>Thời gian</th>
+                            <th>Recipient</th>
+                            <th>Actor</th>
+                            <th>Type</th>
+                            <th>Content</th>
+                            <th>Time</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1930,7 +1930,7 @@
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="5">Không có thông báo.</td>
+                            <td colspan="5">No notifications.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -2690,9 +2690,9 @@
                 s('cnt_rating', j.counts.rating);
                 s('cnt_favorite', j.counts.favorite);
                 s('cnt_notification', j.counts.notification);
-                btn.textContent = 'Đã kiểm tra';
+                btn.textContent = 'Checked';
             } catch (e) {
-                btn.textContent = 'Lỗi, thử lại';
+                btn.textContent = 'Error, try again';
             }
         });
     }
@@ -2707,7 +2707,7 @@
             ]
         };
     const categoryData = {
-        labels: [{% for label, count in category_counts %}'{{ label or "Khác" }}'{% if not loop.last %}, {% endif %} {% endfor %}],
+        labels: [{% for label, count in category_counts %}'{{ label or "Other" }}'{% if not loop.last %}, {% endif %} {% endfor %}],
     data: [{% for label, count in category_counts %}{ { count } } {% if not loop.last %}, {% endif %} {% endfor %}]
         };
     if (statusCanvas) {
@@ -2749,7 +2749,7 @@
     }
     function submitBatch(action) {
         const ids = Array.from(document.querySelectorAll('.row-check:checked')).map(c => c.value);
-        if (!ids.length) { alert('Chưa chọn công thức'); return; }
+        if (!ids.length) { alert('No recipes selected'); return; }
         document.getElementById('batchAction').value = action;
         document.getElementById('batchIds').value = ids.join(',');
         document.getElementById('batchForm').submit();
