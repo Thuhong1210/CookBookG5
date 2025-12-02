@@ -1,2 +1,2 @@
-web: python backend/run.py
+web: gunicorn --chdir backend mycookbook:app --bind 0.0.0.0:$PORT
 
