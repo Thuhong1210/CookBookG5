@@ -1942,165 +1942,566 @@
 
         {% if active_view == 'users' %}
         <section class="panel" id="users-panel">
-            <div class="panel-header">
-                <h3>User Management</h3>
-                <p>Grant Permission admin hoặc xoá tài khoản</p>
+            <!-- Header with Title and Actions -->
+            <div
+                style="background: white; border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div>
+                        <h2 style="font-size: 24px; font-weight: 700; color: #1a202c; margin: 0 0 4px 0;">Users
+                            Management</h2>
+                        <p style="color: #718096; font-size: 14px; margin: 0;">Manage user accounts, roles, and
+                            permissions</p>
+                    </div>
+                </div>
+
+                <!-- Search and Filters -->
+                <form action="{{ url_for('admin_users') }}" method="get"
+                    style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                    <!-- Search Box -->
+                    <div style="position: relative; flex: 1; min-width: 250px;">
+                        <i class="fas fa-search"
+                            style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px;"></i>
+                        <input type="text" name="q" value="{{ q or '' }}" placeholder="Search by name or email..."
+                            style="width: 100%; padding: 10px 12px 10px 36px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+                    </div>
+
+                    <!-- Role Filter -->
+                    <select name="role"
+                        style="padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; min-width: 140px;">
+                        <option value="">All Roles</option>
+                        <option value="admin" {% if role_filter=='admin' %}selected{% endif %}>Admin</option>
+                        <option value="user" {% if role_filter=='user' %}selected{% endif %}>User</option>
+                    </select>
+
+                    <!-- Status Filter -->
+                    <select name="status"
+                        style="padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; min-width: 140px;">
+                        <option value="">All Statuses</option>
+                        <option value="active" {% if status_filter=='active' %}selected{% endif %}>Active</option>
+                        <option value="inactive" {% if status_filter=='inactive' %}selected{% endif %}>Inactive</option>
+                    </select>
+
+                    <!-- Bulk Actions Placeholder -->
+                    <div
+                        style="padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; color: #94a3b8; min-width: 140px;">
+                        Bulk Actions (0)
+                    </div>
+
+                    <!-- Add New User Button -->
+                    <a href="{{ url_for('admin_users') }}?action=add"
+                        style="background: #F97316; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; white-space: nowrap;">
+                        <i class="fas fa-plus-circle"></i>
+                        Add New User
+                    </a>
+                </form>
             </div>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for user in users %}
-                        <tr>
-                            <td>{{ user.username }}</td>
-                            <td>{{ user.email }}</td>
-                            <td>
-                                {% if user.is_admin %}
-                                <span class="badge admin">Admin</span>
-                                {% else %}
-                                <span class="badge user">User</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if current_user.id != user.id %}
-                                <form action="{{ url_for('toggle_user_admin', user_id=user.id) }}" method="post"
-                                    style="display:inline">
-                                    <button class="action-btn">{{ 'Revoke Permission' if user.is_admin else 'Grant
-                                        Permission
-                                        admin' }}</button>
-                                </form>
-                                <form action="{{ url_for('delete_user_admin', user_id=user.id) }}" method="post"
-                                    style="display:inline"
-                                    onsubmit="return confirm('Delete người dùng {{ user.username }}?');">
-                                    <button class="action-btn danger">Delete</button>
-                                </form>
-                                {% else %}
-                                <small class="text-muted">Currently logged in</small>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% else %}
-                        <tr>
-                            <td colspan="4">No users yet.</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+
+            <!-- Users Table -->
+            <div style="background: white; border-radius: 16px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid #f1f5f9;">
+                                <th
+                                    style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    <input type="checkbox" onclick="toggleAllUsers(this)" style="cursor: pointer;">
+                                </th>
+                                <th
+                                    style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    Name</th>
+                                <th
+                                    style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    Email</th>
+                                <th
+                                    style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    Role</th>
+                                <th
+                                    style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    Signup Date
+                                    <i class="fas fa-sort" style="margin-left: 4px; font-size: 10px;"></i>
+                                </th>
+                                <th
+                                    style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    Status</th>
+                                <th
+                                    style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.2s;"
+                                onmouseover="this.style.background='#f8fafc'"
+                                onmouseout="this.style.background='white'">
+                                <!-- Checkbox -->
+                                <td style="padding: 16px;">
+                                    <input type="checkbox" class="user-checkbox" value="{{ user.id }}"
+                                        style="cursor: pointer;">
+                                </td>
+
+                                <!-- Avatar + Name -->
+                                <td style="padding: 16px;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <img src="{{ user.profile_picture or 'https://ui-avatars.com/api/?name=' + user.username + '&background=F97316&color=fff&size=40' }}"
+                                            alt="{{ user.username }}"
+                                            style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                                        <span style="font-weight: 500; color: #1a202c; font-size: 14px;">{{
+                                            user.username }}</span>
+                                    </div>
+                                </td>
+
+                                <!-- Email -->
+                                <td style="padding: 16px;">
+                                    <span style="color: #64748b; font-size: 14px;">{{ user.email }}</span>
+                                </td>
+
+                                <!-- Role -->
+                                <td style="padding: 16px;">
+                                    {% if user.is_admin %}
+                                    <span
+                                        style="background: rgba(249, 115, 22, 0.1); color: #F97316; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 500;">Admin</span>
+                                    {% else %}
+                                    <span
+                                        style="background: #f1f5f9; color: #64748b; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 500;">User</span>
+                                    {% endif %}
+                                </td>
+
+                                <!-- Signup Date -->
+                                <td style="padding: 16px;">
+                                    <span style="color: #64748b; font-size: 14px;">{{
+                                        user.created_at.strftime('%Y-%m-%d') if user.created_at else 'N/A' }}</span>
+                                </td>
+
+                                <!-- Status -->
+                                <td style="padding: 16px;">
+                                    <span
+                                        style="background: #d1fae5; color: #065f46; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 500;">Active</span>
+                                </td>
+
+                                <!-- Actions -->
+                                <td style="padding: 16px;">
+                                    <div style="display: flex; gap: 8px;">
+                                        {% if current_user.id != user.id %}
+                                        <!-- Edit Button -->
+                                        <button onclick="editUser({{ user.id }})"
+                                            style="background: none; border: none; color: #64748b; cursor: pointer; padding: 6px; transition: color 0.2s;"
+                                            onmouseover="this.style.color='#F97316'"
+                                            onmouseout="this.style.color='#64748b'" title="Edit user">
+                                            <i class="fas fa-edit" style="font-size: 16px;"></i>
+                                        </button>
+
+                                        <!-- Toggle Admin -->
+                                        <form action="{{ url_for('toggle_user_admin', user_id=user.id) }}" method="post"
+                                            style="display: inline;">
+                                            <button type="submit"
+                                                style="background: none; border: none; color: #64748b; cursor: pointer; padding: 6px; transition: color 0.2s;"
+                                                onmouseover="this.style.color='#3b82f6'"
+                                                onmouseout="this.style.color='#64748b'"
+                                                title="{{ 'Revoke admin' if user.is_admin else 'Grant admin' }}">
+                                                <i class="fas fa-{{ 'user-shield' if not user.is_admin else 'user-minus' }}"
+                                                    style="font-size: 16px;"></i>
+                                            </button>
+                                        </form>
+
+                                        <!-- Delete Button -->
+                                        <form action="{{ url_for('delete_user_admin', user_id=user.id) }}" method="post"
+                                            style="display: inline;"
+                                            onsubmit="return confirm('Are you sure you want to delete {{ user.username }}?');">
+                                            <button type="submit"
+                                                style="background: none; border: none; color: #64748b; cursor: pointer; padding: 6px; transition: color 0.2s;"
+                                                onmouseover="this.style.color='#ef4444'"
+                                                onmouseout="this.style.color='#64748b'" title="Delete user">
+                                                <i class="fas fa-trash" style="font-size: 16px;"></i>
+                                            </button>
+                                        </form>
+                                        {% else %}
+                                        <span style="color: #94a3b8; font-size: 13px; font-style: italic;">Current
+                                            user</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="7" style="padding: 40px; text-align: center; color: #94a3b8;">
+                                    <i class="fas fa-users"
+                                        style="font-size: 48px; opacity: 0.3; margin-bottom: 12px; display: block;"></i>
+                                    <p style="margin: 0; font-size: 14px;">No users found</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #f1f5f9;">
+                    <div style="color: #64748b; font-size: 14px;">
+                        Showing {{ users|length }} of {{ total_users or users|length }} users
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button
+                            style="padding: 8px 16px; border: 1px solid #e2e8f0; border-radius: 8px; background: white; color: #64748b; font-size: 14px; cursor: pointer; transition: all 0.2s;"
+                            onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
+                            Previous
+                        </button>
+                        <button onclick="document.getElementById('addUserModal').style.display='flex'"
+                            style="padding: 10px 20px; background: #F97316; color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;"
+                            onmouseover="this.style.background='#ea580c'" onmouseout="this.style.background='#F97316'">
+                            <i class="fas fa-plus"></i>
+                            Add New User
+                        </button>
+                        <button
+                            style="padding: 8px 16px; border: 1px solid #e2e8f0; border-radius: 8px; background: white; color: #1a202c; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;"
+                            onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
+                            Next
+                        </button>
+                    </div>
+                </div>
             </div>
         </section>
+
+        <script>
+            function toggleAllUsers(checkbox) {
+                const checkboxes = document.querySelectorAll('.user-checkbox');
+                checkboxes.forEach(cb => cb.checked = checkbox.checked);
+            }
+
+            function editUser(userId) {
+                fetch(`/admin/users/get/${userId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('edit_username').value = data.username;
+                        document.getElementById('edit_email').value = data.email;
+                        document.getElementById('edit_role').value = data.is_admin ? 'admin' : 'user';
+                        document.getElementById('editUserForm').action = `/admin/users/edit/${userId}`;
+
+                        const modal = document.getElementById('editUserModal');
+                        modal.style.display = 'flex';
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        </script>
+
+        <!-- Add User Modal -->
+        <div id="addUserModal"
+            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+            <div style="background: white; padding: 24px; border-radius: 16px; width: 400px; max-width: 90%;">
+                <h3 style="margin-top: 0; margin-bottom: 20px; color: #1a202c;">Add New User</h3>
+                <form action="{{ url_for('admin_user_add') }}" method="POST">
+                    <div style="margin-bottom: 16px;">
+                        <label
+                            style="display: block; margin-bottom: 8px; font-weight: 500; color: #475569;">Username</label>
+                        <input type="text" name="username" required
+                            style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <label
+                            style="display: block; margin-bottom: 8px; font-weight: 500; color: #475569;">Email</label>
+                        <input type="email" name="email" required
+                            style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <label
+                            style="display: block; margin-bottom: 8px; font-weight: 500; color: #475569;">Password</label>
+                        <input type="password" name="password" required
+                            style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                    </div>
+                    <div style="margin-bottom: 24px;">
+                        <label
+                            style="display: block; margin-bottom: 8px; font-weight: 500; color: #475569;">Role</label>
+                        <select name="role"
+                            style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                        <button type="button" onclick="document.getElementById('addUserModal').style.display='none'"
+                            style="padding: 10px 20px; background: #e2e8f0; border: none; border-radius: 8px; cursor: pointer; font-weight: 500;">Cancel</button>
+                        <button type="submit"
+                            style="padding: 10px 20px; background: #F97316; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500;">Add
+                            User</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Edit User Modal -->
+        <div id="editUserModal"
+            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+            <div style="background: white; padding: 24px; border-radius: 16px; width: 400px; max-width: 90%;">
+                <h3 style="margin-top: 0; margin-bottom: 20px; color: #1a202c;">Edit User</h3>
+                <form id="editUserForm" method="POST">
+                    <div style="margin-bottom: 16px;">
+                        <label
+                            style="display: block; margin-bottom: 8px; font-weight: 500; color: #475569;">Username</label>
+                        <input type="text" id="edit_username" name="username" required
+                            style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <label
+                            style="display: block; margin-bottom: 8px; font-weight: 500; color: #475569;">Email</label>
+                        <input type="email" id="edit_email" name="email" required
+                            style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #475569;">New
+                            Password (leave blank to keep current)</label>
+                        <input type="password" name="password"
+                            style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                    </div>
+                    <div style="margin-bottom: 24px;">
+                        <label
+                            style="display: block; margin-bottom: 8px; font-weight: 500; color: #475569;">Role</label>
+                        <select id="edit_role" name="role"
+                            style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                        <button type="button" onclick="document.getElementById('editUserModal').style.display='none'"
+                            style="padding: 10px 20px; background: #e2e8f0; border: none; border-radius: 8px; cursor: pointer; font-weight: 500;">Cancel</button>
+                        <button type="submit"
+                            style="padding: 10px 20px; background: #F97316; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500;">Save
+                            Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
         {% endif %}
 
         {% if active_view == 'recipes' %}
         <section class="panel" id="recipes-moderation">
-            <div class="panel-header">
-                <div>
-                    <h3>Recipes Moderation</h3>
-                    <p>Manage user-submitted recipes</p>
+            <!-- Header with Title and Actions -->
+            <div
+                style="background: white; border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div>
+                        <h2 style="font-size: 24px; font-weight: 700; color: #1a202c; margin: 0 0 4px 0;">Recipes
+                            Moderation</h2>
+                        <p style="color: #718096; font-size: 14px; margin: 0;">Review and manage user-submitted recipes
+                        </p>
+                    </div>
                 </div>
+
+                <!-- Search and Filters -->
                 <form action="{{ url_for('admin_recipes') }}" method="get"
-                    style="display:flex; gap:10px; align-items:center;">
-                    <input type="text" name="q" value="{{ q }}" placeholder="Search recipes by title..."
-                        style="padding:10px 12px; border:1px solid #e2e8f0; border-radius:8px; width:240px;">
-                    <select name="status" style="padding:10px; border:1px solid #e2e8f0; border-radius:8px;">
-                        <option value="">Status</option>
+                    style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                    <!-- Search Box -->
+                    <div style="position: relative; flex: 1; min-width: 200px;">
+                        <i class="fas fa-search"
+                            style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px;"></i>
+                        <input type="text" name="q" value="{{ q or '' }}" placeholder="Search recipes..."
+                            style="width: 100%; padding: 10px 12px 10px 36px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+                    </div>
+
+                    <!-- Status Filter -->
+                    <select name="status"
+                        style="padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; min-width: 120px;">
+                        <option value="">All Statuses</option>
                         <option value="approved" {% if status_filter=='approved' %}selected{% endif %}>Approved</option>
                         <option value="pending" {% if status_filter=='pending' %}selected{% endif %}>Pending</option>
                         <option value="hidden" {% if status_filter=='hidden' %}selected{% endif %}>Hidden</option>
                     </select>
-                    <select name="difficulty" style="padding:10px; border:1px solid #e2e8f0; border-radius:8px;">
-                        <option value="">Difficulty</option>
+
+                    <!-- Difficulty Filter -->
+                    <select name="difficulty"
+                        style="padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; min-width: 120px;">
+                        <option value="">All Difficulties</option>
                         <option value="Easy" {% if difficulty_filter=='Easy' %}selected{% endif %}>Easy</option>
                         <option value="Medium" {% if difficulty_filter=='Medium' %}selected{% endif %}>Medium</option>
                         <option value="Hard" {% if difficulty_filter=='Hard' %}selected{% endif %}>Hard</option>
                     </select>
-                    <select name="category" style="padding:10px; border:1px solid #e2e8f0; border-radius:8px;">
-                        <option value="">Category</option>
+
+                    <!-- Category Filter -->
+                    <select name="category"
+                        style="padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; min-width: 120px;">
+                        <option value="">All Categories</option>
                         {% for label, count in category_counts %}
                         <option value="{{ label }}" {% if category_filter==label %}selected{% endif %}>{{ label or
                             'Other' }}</option>
                         {% endfor %}
                     </select>
-                    <input type="text" name="author" value="{{ author_filter }}" placeholder="Filter by author..."
-                        style="padding:10px 12px; border:1px solid #e2e8f0; border-radius:8px; width:200px;">
-                    <button class="action-btn" type="submit">Filter</button>
+
+                    <button type="submit"
+                        style="background: #F97316; color: white; padding: 10px 20px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s;"
+                        onmouseover="this.style.background='#ea580c'" onmouseout="this.style.background='#F97316'">
+                        Filter
+                    </button>
                 </form>
             </div>
-            <div class="table-wrapper">
-                <form id="batchForm" action="{{ url_for('admin_recipes_batch') }}" method="post">
-                    <div style="display:flex; gap:10px; margin-bottom:12px;">
-                        <button class="action-btn" type="button" onclick="submitBatch('approve')">Approve
-                            Selected</button>
-                        <button class="action-btn" type="button" onclick="submitBatch('hide')">Hide Selected</button>
-                        <button class="action-btn danger" type="button" onclick="submitBatch('delete')">Delete
-                            Selected</button>
-                    </div>
-                    <input type="hidden" name="action" id="batchAction">
-                    <input type="hidden" name="ids" id="batchIds">
-                    <table>
+
+            <!-- Recipes Table -->
+            <div style="background: white; border-radius: 16px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
                         <thead>
-                            <tr>
-                                <th><input type="checkbox" onclick="toggleAll(this)"></th>
-                                <th>Recipe Image</th>
-                                <th>Recipe Title</th>
-                                <th>Author</th>
-                                <th>Category</th>
-                                <th>Difficulty</th>
-                                <th>Created Date</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                            <tr style="border-bottom: 2px solid #f1f5f9;">
+                                <th
+                                    style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; width: 40px;">
+                                    <input type="checkbox" onclick="toggleAllRecipes(this)" style="cursor: pointer;">
+                                </th>
+                                <th
+                                    style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    Recipe</th>
+                                <th
+                                    style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    Details</th>
+                                <th
+                                    style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    Status</th>
+                                <th
+                                    style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    Date</th>
+                                <th
+                                    style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for recipe in moderation_recipes %}
-                            <tr>
-                                <td><input type="checkbox" class="row-check" value="{{ recipe.id }}"></td>
-                                <td>
-                                    {% if recipe.image_url %}
-                                    <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}"
-                                        style="width:44px; height:44px; object-fit:cover; border-radius:8px;">
-                                    {% endif %}
+                            <tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.2s;"
+                                onmouseover="this.style.background='#f8fafc'"
+                                onmouseout="this.style.background='white'">
+                                <td style="padding: 16px;">
+                                    <input type="checkbox" class="recipe-checkbox" value="{{ recipe.id }}"
+                                        style="cursor: pointer;">
                                 </td>
-                                <td>{{ recipe.title }}</td>
-                                <td>{{ recipe.user.username if recipe.user else 'Deleted' }}</td>
-                                <td>{{ recipe.category or 'Other' }}</td>
-                                <td>{{ recipe.difficulty }}</td>
-                                <td>{{ recipe.created_at.strftime('%Y-%m-%d') if recipe.created_at else '' }}</td>
-                                <td>
+                                <td style="padding: 16px;">
+                                    <div style="display: flex; gap: 12px;">
+                                        <img src="{{ recipe.image_url or 'https://via.placeholder.com/60' }}"
+                                            alt="{{ recipe.title }}"
+                                            style="width: 60px; height: 60px; border-radius: 8px; object-fit: cover;">
+                                        <div style="display: flex; flex-direction: column; justify-content: center;">
+                                            <span
+                                                style="font-weight: 600; color: #1a202c; font-size: 14px; margin-bottom: 4px;">{{
+                                                recipe.title }}</span>
+                                            <span style="color: #64748b; font-size: 12px;">by {{ recipe.user.username if
+                                                recipe.user else 'Unknown' }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="padding: 16px;">
+                                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                                        <span style="font-size: 13px; color: #1a202c;">{{ recipe.category or
+                                            'Uncategorized' }}</span>
+                                        <span style="font-size: 12px; color: #64748b;">{{ recipe.difficulty }}</span>
+                                    </div>
+                                </td>
+                                <td style="padding: 16px;">
                                     {% if recipe.status == 'approved' %}
-                                    <span class="badge admin">Approved</span>
+                                    <span
+                                        style="background: #d1fae5; color: #065f46; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">Approved</span>
                                     {% elif recipe.status == 'pending' %}
-                                    <span class="badge user" style="background:#ffe9e3; color:#ff7b00;">Pending</span>
+                                    <span
+                                        style="background: #ffedd5; color: #c2410c; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">Pending</span>
                                     {% else %}
-                                    <span class="badge user">Hidden</span>
+                                    <span
+                                        style="background: #f1f5f9; color: #64748b; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">Hidden</span>
                                     {% endif %}
                                 </td>
-                                <td>
-                                    <a href="{{ url_for('recipe_details', recipe_id=recipe.id) }}" target="_blank"
-                                        class="action-btn">Xem</a>
-                                    <form action="{{ url_for('delete_recipe_admin', recipe_id=recipe.id) }}"
-                                        method="post" style="display:inline"
-                                        onsubmit="return confirm('Delete công thức {{ recipe.title }}?');">
-                                        <button class="action-btn danger">Delete</button>
-                                    </form>
+                                <td style="padding: 16px;">
+                                    <span style="color: #64748b; font-size: 13px;">{{
+                                        recipe.created_at.strftime('%Y-%m-%d') if recipe.created_at else 'N/A' }}</span>
+                                </td>
+                                <td style="padding: 16px;">
+                                    <div style="display: flex; gap: 8px;">
+                                        {% if recipe.status != 'approved' %}
+                                        <form action="{{ url_for('admin_recipe_approve', recipe_id=recipe.id) }}"
+                                            method="post" style="display: inline;">
+                                            <button type="submit"
+                                                style="background: none; border: none; color: #10b981; cursor: pointer; padding: 6px;"
+                                                title="Approve">
+                                                <i class="fas fa-check" style="font-size: 16px;"></i>
+                                            </button>
+                                        </form>
+                                        {% endif %}
+
+                                        {% if recipe.status != 'hidden' %}
+                                        <form action="{{ url_for('admin_recipe_hide', recipe_id=recipe.id) }}"
+                                            method="post" style="display: inline;">
+                                            <button type="submit"
+                                                style="background: none; border: none; color: #f59e0b; cursor: pointer; padding: 6px;"
+                                                title="Hide">
+                                                <i class="fas fa-eye-slash" style="font-size: 16px;"></i>
+                                            </button>
+                                        </form>
+                                        {% endif %}
+
+                                        <a href="{{ url_for('recipe_details', recipe_id=recipe.id) }}" target="_blank"
+                                            style="color: #3b82f6; padding: 6px;" title="View Details">
+                                            <i class="fas fa-external-link-alt" style="font-size: 16px;"></i>
+                                        </a>
+
+                                        <form action="{{ url_for('delete_recipe_admin', recipe_id=recipe.id) }}"
+                                            method="post" style="display: inline;"
+                                            onsubmit="return confirm('Delete recipe {{ recipe.title }}?');">
+                                            <button type="submit"
+                                                style="background: none; border: none; color: #ef4444; cursor: pointer; padding: 6px;"
+                                                title="Delete">
+                                                <i class="fas fa-trash" style="font-size: 16px;"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                             {% else %}
                             <tr>
-                                <td colspan="9">No matching recipes.</td>
+                                <td colspan="6" style="padding: 40px; text-align: center; color: #94a3b8;">
+                                    <i class="fas fa-utensils"
+                                        style="font-size: 48px; opacity: 0.3; margin-bottom: 12px; display: block;"></i>
+                                    <p style="margin: 0; font-size: 14px;">No recipes found</p>
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                </form>
+                </div>
+
+                <!-- Pagination -->
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #f1f5f9;">
+                    <div style="color: #64748b; font-size: 14px;">
+                        Showing {{ moderation_recipes|length }} of {{ total_recipes or moderation_recipes|length }}
+                        recipes
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        {% if pagination.has_prev %}
+                        <a href="{{ url_for('admin_recipes', page=pagination.prev_num, q=q, status=status_filter, difficulty=difficulty_filter, category=category_filter, author=author_filter) }}"
+                            style="padding: 8px 16px; border: 1px solid #e2e8f0; border-radius: 8px; background: white; color: #64748b; font-size: 14px; text-decoration: none; transition: all 0.2s;"
+                            onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
+                            Previous
+                        </a>
+                        {% else %}
+                        <button disabled
+                            style="padding: 8px 16px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f1f5f9; color: #cbd5e1; font-size: 14px; cursor: not-allowed;">Previous</button>
+                        {% endif %}
+
+                        {% if pagination.has_next %}
+                        <a href="{{ url_for('admin_recipes', page=pagination.next_num, q=q, status=status_filter, difficulty=difficulty_filter, category=category_filter, author=author_filter) }}"
+                            style="padding: 8px 16px; border: 1px solid #e2e8f0; border-radius: 8px; background: white; color: #1a202c; font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.2s;"
+                            onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
+                            Next
+                        </a>
+                        {% else %}
+                        <button disabled
+                            style="padding: 8px 16px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f1f5f9; color: #cbd5e1; font-size: 14px; cursor: not-allowed;">Next</button>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </section>
+
+        <script>
+            function toggleAllRecipes(checkbox) {
+                const checkboxes = document.querySelectorAll('.recipe-checkbox');
+                checkboxes.forEach(cb => cb.checked = checkbox.checked);
+            }
+        </script>
+
         {% endif %}
 
         {% if active_view == 'comments' %}
@@ -2945,15 +3346,14 @@
             labels: ['Approved', 'Pending', 'Hidden'],
             data: [
                 {{ approved_recipes_count or 0 }},
-                            {{ pending_recipes_count or 0 }},
-
+                {{ pending_recipes_count or 0 }},
                 {{ hidden_recipes_count or 0 }}
             ]
         };
 
     const categoryData = {
         labels: [{% for label, count in category_counts %}'{{ label or "Other" }}'{% if not loop.last %}, {% endif %} {% endfor %}],
-    data: [{% for label, count in category_counts %}{ { count } } {% if not loop.last %}, {% endif %} {% endfor %}]
+    data: [{% for label, count in category_counts %}{{ count }} {% if not loop.last %}, {% endif %} {% endfor %}]
         };
 
     if (statusCanvas) {

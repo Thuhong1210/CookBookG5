@@ -19,7 +19,7 @@ from flask import (
 )
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
-from sqlalchemy import inspect, text
+from sqlalchemy import inspect, text, or_
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
 
@@ -1114,8 +1114,106 @@ def admin_recipes_batch():
 @login_required
 @admin_required
 def admin_users():
-    users = User.query.order_by(User.id.desc()).all()
-    return render_template('Admin.html', active_view='users', users=users)
+    # Get query parameters
+    q = request.args.get('q', '')
+    role_filter = request.args.get('role', '')
+    status_filter = request.args.get('status', '')
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+
+    # Base query
+    query = User.query
+
+    # Search
+    if q:
+        search = f"%{q}%"
+        query = query.filter(or_(User.username.like(search), User.email.like(search)))
+
+    # Filter by Role
+    if role_filter:
+        if role_filter == 'admin':
+            query = query.filter(User.is_admin == True)
+        elif role_filter == 'user':
+            query = query.filter(User.is_admin == False)
+
+    # Pagination
+    pagination = query.order_by(User.id.desc()).paginate(page=page, per_page=per_page, error_out=False)
+    users = pagination.items
+
+    return render_template('Admin.html', active_view='users', users=users, pagination=pagination, 
+                           q=q, role_filter=role_filter, status_filter=status_filter, total_users=pagination.total)
+
+@app.route("/admin/users/add", methods=['POST'])
+@login_required
+@admin_required
+def admin_user_add():
+    username = request.form.get('username')
+    email = request.form.get('email')
+    password = request.form.get('password')
+    role = request.form.get('role')
+
+    if User.query.filter_by(username=username).first():
+        flash('Username already exists!', 'error')
+        return redirect(url_for('admin_users'))
+    
+    if User.query.filter_by(email=email).first():
+        flash('Email already exists!', 'error')
+        return redirect(url_for('admin_users'))
+
+    hashed_password = generate_password_hash(password)
+    new_user = User(
+        username=username,
+        email=email,
+        password_hash=hashed_password,
+        is_admin=(role == 'admin')
+    )
+    db.session.add(new_user)
+    db.session.commit()
+    flash('User added successfully!', 'success')
+    return redirect(url_for('admin_users'))
+
+@app.route("/admin/users/edit/<int:user_id>", methods=['POST'])
+@login_required
+@admin_required
+def admin_user_edit(user_id):
+    user = User.query.get_or_404(user_id)
+    
+    username = request.form.get('username')
+    email = request.form.get('email')
+    role = request.form.get('role')
+    password = request.form.get('password')
+
+    # Check duplicates if username/email changed
+    if username != user.username and User.query.filter_by(username=username).first():
+        flash('Username already exists!', 'error')
+        return redirect(url_for('admin_users'))
+    
+    if email != user.email and User.query.filter_by(email=email).first():
+        flash('Email already exists!', 'error')
+        return redirect(url_for('admin_users'))
+
+    user.username = username
+    user.email = email
+    user.is_admin = (role == 'admin')
+    
+    if password: # Only update password if provided
+        user.password_hash = generate_password_hash(password)
+
+    db.session.commit()
+    flash('User updated successfully!', 'success')
+    return redirect(url_for('admin_users'))
+
+@app.route("/admin/users/get/<int:user_id>")
+@login_required
+@admin_required
+def admin_user_get(user_id):
+    user = User.query.get_or_404(user_id)
+    return jsonify({
+        'id': user.id,
+        'username': user.username,
+        'email': user.email,
+        'is_admin': user.is_admin
+    })
 
 @app.route("/admin/recipes")
 @login_required
@@ -1126,6 +1224,8 @@ def admin_recipes():
     difficulty_filter = request.args.get('difficulty', '')
     category_filter = request.args.get('category', '')
     author_filter = request.args.get('author', '').strip()
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
 
     category_counts = db.session.query(Recipe.category, db.func.count(Recipe.id)).group_by(Recipe.category).all()
     status_counts = db.session.query(Recipe.status, db.func.count(Recipe.id)).group_by(Recipe.status).all()
@@ -1142,7 +1242,8 @@ def admin_recipes():
     if author_filter:
         moderation_query = moderation_query.join(User).filter(User.username.contains(author_filter))
 
-    moderation_recipes = moderation_query.order_by(Recipe.id.desc()).limit(50).all()
+    pagination = moderation_query.order_by(Recipe.id.desc()).paginate(page=page, per_page=per_page, error_out=False)
+    moderation_recipes = pagination.items
 
     return render_template(
         'Admin.html',
@@ -1150,12 +1251,34 @@ def admin_recipes():
         category_counts=category_counts,
         status_counts=status_counts,
         moderation_recipes=moderation_recipes,
+        pagination=pagination,
         q=q,
         status_filter=status_filter,
         difficulty_filter=difficulty_filter,
         category_filter=category_filter,
         author_filter=author_filter,
+        total_recipes=pagination.total
     )
+
+@app.route("/admin/recipes/approve/<int:recipe_id>", methods=['POST'])
+@login_required
+@admin_required
+def admin_recipe_approve(recipe_id):
+    recipe = Recipe.query.get_or_404(recipe_id)
+    recipe.status = 'approved'
+    db.session.commit()
+    flash(f'Recipe "{recipe.title}" has been approved.', 'success')
+    return redirect(url_for('admin_recipes'))
+
+@app.route("/admin/recipes/hide/<int:recipe_id>", methods=['POST'])
+@login_required
+@admin_required
+def admin_recipe_hide(recipe_id):
+    recipe = Recipe.query.get_or_404(recipe_id)
+    recipe.status = 'hidden'
+    db.session.commit()
+    flash(f'Recipe "{recipe.title}" has been hidden.', 'success')
+    return redirect(url_for('admin_recipes'))
 
 @app.route("/admin/comments")
 @login_required
