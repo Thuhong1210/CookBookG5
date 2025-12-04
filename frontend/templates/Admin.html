@@ -874,6 +874,11 @@
         font-size: 11px;
         margin-left: 6px;
     }
+
+    .sidebar-link.active {
+        background: #ff7b00 !important;
+        color: #fff !important;
+    }
 </style>
 <div class="admin-header">
     <div class="admin-nav">
@@ -903,33 +908,41 @@
     <aside style="background:#fff; border:1px solid #edf2f7; border-radius:16px; padding:16px; height:fit-content;">
         <nav style="display:flex; flex-direction:column; gap:6px;">
             <a href="{{ url_for('admin_dashboard') }}"
-                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px; {% if active_view=='dashboard' %}background:#ff7b00; color:#fff;{% endif %}"><i
+                class="sidebar-link {% if active_view=='dashboard' %}active{% endif %}"
+                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px;"><i
                     class="fa fa-gauge"></i><span>Dashboard</span></a>
             <a href="{{ url_for('admin_profile') }}"
-                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px; {% if active_view=='profile' %}background:#ff7b00; color:#fff;{% endif %}"><i
+                class="sidebar-link {% if active_view=='profile' %}active{% endif %}"
+                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px;"><i
                     class="fa fa-id-card"></i><span>Admin Profile</span></a>
-            <a href="{{ url_for('admin_users') }}"
-                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px; {% if active_view=='users' %}background:#ff7b00; color:#fff;{% endif %}"><i
+            <a href="{{ url_for('admin_users') }}" class="sidebar-link {% if active_view=='users' %}active{% endif %}"
+                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px;"><i
                     class="fa fa-user"></i><span>Users</span></a>
             <a href="{{ url_for('admin_recipes') }}"
-                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px; {% if active_view=='recipes' %}background:#ff7b00; color:#fff;{% endif %}"><i
+                class="sidebar-link {% if active_view=='recipes' %}active{% endif %}"
+                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px;"><i
                     class="fa fa-utensils"></i><span>Recipes</span></a>
             <a href="{{ url_for('admin_categories') }}"
-                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px; {% if active_view=='categories' %}background:#ff7b00; color:#fff;{% endif %}">
+                class="sidebar-link {% if active_view=='categories' %}active{% endif %}"
+                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px;">
                 <i class="fa fa-tags"></i><span>Categories & Tags</span>
             </a>
             <a href="{{ url_for('admin_comments') }}"
-                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px; {% if active_view=='comments' %}background:#ff7b00; color:#fff;{% endif %}"><i
+                class="sidebar-link {% if active_view=='comments' %}active{% endif %}"
+                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px;"><i
                     class="fa fa-comments"></i><span>Comments</span></a>
             <a href="{{ url_for('admin_reports') }}"
-                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px; {% if active_view=='reports' %}background:#ff7b00; color:#fff;{% endif %}">
+                class="sidebar-link {% if active_view=='reports' %}active{% endif %}"
+                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px;">
                 <i class="fa fa-flag"></i><span>Reports</span>
             </a>
             <a href="{{ url_for('admin_notifications') }}"
-                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px; {% if active_view=='notifications' %}background:#ff7b00; color:#fff;{% endif %}"><i
+                class="sidebar-link {% if active_view=='notifications' %}active{% endif %}"
+                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px;"><i
                     class="fa fa-bell"></i><span>Notifications</span></a>
             <a href="{{ url_for('admin_settings') }}"
-                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px; {% if active_view=='settings' %}background:#ff7b00; color:#fff;{% endif %}"><i
+                class="sidebar-link {% if active_view=='settings' %}active{% endif %}"
+                style="padding:10px 12px; border-radius:8px; color:#1f2933; display:flex; align-items:center; gap:10px;"><i
                     class="fa fa-gear"></i><span>System Settings</span></a>
         </nav>
     </aside>
@@ -1684,8 +1697,8 @@
                             <i class="fa fa-edit"></i>
                         </button>
                         <form action="{{ url_for('delete_category', category_id=category.id) }}" method="post"
-                            style="display: inline;" onsubmit="return confirm('Delete category \" {{ category.name }}\"?
-                            All recipes in this category will be moved to uncategorized.');">
+                            style="display: inline;"
+                            onsubmit="return confirm('Delete category {{ category.name }}? All recipes in this category will be moved to uncategorized.');">
                             <button type="submit" class="action-btn danger">
                                 <i class="fa fa-trash"></i>
                             </button>
@@ -1758,7 +1771,7 @@
                             <i class="fa fa-edit"></i>
                         </button>
                         <form action="{{ url_for('delete_tag', tag_id=tag.id) }}" method="post" style="display: inline;"
-                            onsubmit="return confirm('Delete tag \" {{ tag.name }}\"?');">
+                            onsubmit="return confirm('Delete tag {{ tag.name }}?');">
                             <button type="submit" class="action-btn danger">
                                 <i class="fa fa-trash"></i>
                             </button>
@@ -3351,11 +3364,10 @@
             ]
         };
 
-    const categoryData = {
-        labels: [{% for label, count in category_counts %}'{{ label or "Other" }}'{% if not loop.last %}, {% endif %} {% endfor %}],
-    data: [{% for label, count in category_counts %}{{ count }} {% if not loop.last %}, {% endif %} {% endfor %}]
+        const categoryData = {
+            labels: [{% for label, count in category_counts %}'{{ label or "Other" }}'{% if not loop.last %}, {% endif %}{% endfor %}],
+            data: [{% for label, count in category_counts %}{{ count }}{% if not loop.last %}, {% endif %}{% endfor %}]
         };
-
     if (statusCanvas) {
         new Chart(statusCanvas, {
             type: 'doughnut',
@@ -3460,6 +3472,44 @@
         document.getElementById('batchAction').value = action;
         document.getElementById('batchIds').value = ids.join(',');
         document.getElementById('batchForm').submit();
+    }
+
+    // Search functions
+    function searchTags() {
+        const searchValue = document.getElementById('searchTags').value.toLowerCase();
+        const tagItems = document.querySelectorAll('.category-tag-item');
+        tagItems.forEach(item => {
+            const tagName = item.querySelector('h4').textContent.toLowerCase();
+            if (tagName.includes(searchValue)) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    // Edit functions
+    function editCategory(categoryId) {
+        // Implement category edit functionality
+        alert('Edit category ' + categoryId);
+    }
+
+    function editTag(tagId) {
+        // Implement tag edit functionality
+        alert('Edit tag ' + tagId);
+    }
+
+    function editUser(userId) {
+        // Implement user edit functionality
+        alert('Edit user ' + userId);
+    }
+
+    // Modal functions
+    function closeEditModal() {
+        const modal = document.getElementById('editModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
     }
 </script>
 {% endblock %}
