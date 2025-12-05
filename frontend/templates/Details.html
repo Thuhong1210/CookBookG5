@@ -894,6 +894,7 @@
 
             {% if current_user.is_authenticated %}
             <div class="user-menu">
+                <a href="{{ url_for('userprofile') }}" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; cursor: pointer;">
             <div class="user-avatar">
                 {% if current_user.profile_picture %}
                     <img src="{{ current_user.profile_picture }}" alt="Profile Picture">
@@ -902,6 +903,7 @@
                 {% endif %}
             </div>
             <span class="user-name">{{ current_user.username }}</span>
+                </a>
                 <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
             </div>
             {% else %}
