@@ -381,6 +381,30 @@ def ensure_admin_schema():
         except Exception as exc:
             app.logger.warning('Không thể thêm cột is_admin: %s', exc)
 
+def ensure_user_is_online_schema():
+    """Ensure is_online column exists in user table"""
+    try:
+        inspector = inspect(db.engine)
+        columns = [column['name'] for column in inspector.get_columns('user')]
+        if 'is_online' not in columns:
+            try:
+                with db.engine.connect() as connection:
+                    if db.engine.dialect.name == 'mysql':
+                        # Use IF NOT EXISTS pattern for MySQL
+                        connection.execute(text('ALTER TABLE `user` ADD COLUMN `is_online` TINYINT(1) DEFAULT 0 NOT NULL AFTER `is_admin`'))
+                    else:
+                        connection.execute(text('ALTER TABLE user ADD COLUMN is_online BOOLEAN DEFAULT 0'))
+                    connection.commit()
+                    app.logger.info('Đã thêm cột is_online vào bảng user')
+            except Exception as exc:
+                # Column might already exist, ignore duplicate column error
+                if 'Duplicate column name' not in str(exc) and 'already exists' not in str(exc).lower():
+                    app.logger.warning('Không thể thêm cột is_online: %s', exc)
+                else:
+                    app.logger.info('Cột is_online đã tồn tại')
+    except Exception as exc:
+        app.logger.warning('Không thể kiểm tra cột is_online: %s', exc)
+
     
     
 def ensure_admin_account():
@@ -490,9 +514,10 @@ def ensure_recipe_schema():
 with app.app_context():
     db.create_all()
     ensure_admin_schema()
+    ensure_user_is_online_schema()  # Must be before ensure_admin_account() to avoid query errors
     ensure_recipe_schema()
-    ensure_admin_account()
     ensure_notification_schema()
+    ensure_admin_account()  # This queries User model, so schema must be ready
     if os.environ.get('AUTO_IMPORT_DUMP', '1') == '1':
         import_data_if_empty()
 
