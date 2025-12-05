@@ -155,87 +155,6 @@ CookBookG5/
 └── README.md                   # This file
 ```
 
----
-
-## 🗄 Database Schema
-
-### Tables
-
-#### **user**
-| Column | Type | Description |
-|--------|------|-------------|
-| id | INTEGER | Primary key |
-| username | VARCHAR(80) | Unique username |
-| email | VARCHAR(120) | Unique email |
-| password_hash | VARCHAR(255) | Hashed password |
-| profile_picture | VARCHAR(200) | Profile image URL |
-| bio | VARCHAR(500) | User biography |
-| is_admin | BOOLEAN | Admin flag |
-
-#### **recipe**
-| Column | Type | Description |
-|--------|------|-------------|
-| id | INTEGER | Primary key |
-| title | VARCHAR(100) | Recipe name |
-| description | TEXT | Recipe description |
-| ingredients | TEXT | Ingredients list |
-| instructions | TEXT | Cooking instructions |
-| cooking_time | INTEGER | Time in minutes |
-| difficulty | VARCHAR(20) | Easy/Medium/Hard |
-| category | VARCHAR(50) | Recipe category |
-| recipe_type | VARCHAR(20) | food/drink |
-| image_url | VARCHAR(200) | Recipe image |
-| user_id | INTEGER | Foreign key to user |
-| status | VARCHAR(20) | pending/approved |
-| created_at | DATETIME | Creation timestamp |
-
-#### **favorite**
-| Column | Type | Description |
-|--------|------|-------------|
-| id | INTEGER | Primary key |
-| user_id | INTEGER | Foreign key to user |
-| recipe_id | INTEGER | Foreign key to recipe |
-
-#### **rating**
-| Column | Type | Description |
-|--------|------|-------------|
-| id | INTEGER | Primary key |
-| user_id | INTEGER | Foreign key to user |
-| recipe_id | INTEGER | Foreign key to recipe |
-| rating | INTEGER | 1-5 stars |
-| created_at | DATETIME | Rating timestamp |
-
-#### **comment**
-| Column | Type | Description |
-|--------|------|-------------|
-| id | INTEGER | Primary key |
-| user_id | INTEGER | Foreign key to user |
-| recipe_id | INTEGER | Foreign key to recipe |
-| comment | TEXT | Comment text |
-| created_at | DATETIME | Comment timestamp |
-
-#### **follow**
-| Column | Type | Description |
-|--------|------|-------------|
-| id | INTEGER | Primary key |
-| follower_id | INTEGER | User who follows |
-| followed_id | INTEGER | User being followed |
-| created_at | DATETIME | Follow timestamp |
-
-#### **notification**
-| Column | Type | Description |
-|--------|------|-------------|
-| id | INTEGER | Primary key |
-| user_id | INTEGER | Recipient user |
-| actor_id | INTEGER | User who triggered |
-| recipe_id | INTEGER | Related recipe (optional) |
-| notification_type | VARCHAR(20) | Type of notification |
-| message | VARCHAR(255) | Notification message |
-| is_read | BOOLEAN | Read status |
-| created_at | DATETIME | Notification timestamp |
-
----
-
 ## 🚀 Installation
 
 ### Prerequisites
@@ -354,7 +273,17 @@ The application will be available at: **http://localhost:8000**
 - **Username**: `admin`
 - **Password**: `123`
 - **Email**: `admin@example.com`
+### AWS EC2 Deployment
 
+Xem hướng dẫn chi tiết tại: [DEPLOY_AWS_EC2.md](DEPLOY_AWS_EC2.md)
+
+**Tóm tắt các bước**:
+1. Launch EC2 instance (Ubuntu 22.04)
+2. Cài đặt Docker & Docker Compose
+3. Clone repository
+4. Cấu hình environment variables
+5. Run với Docker Compose
+6. Cấu hình domain & SSL (Let's Encrypt)
 ---
 
 ## 👥 User Roles
